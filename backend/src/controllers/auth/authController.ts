@@ -10,3 +10,8 @@ export const register = (req: Request, res: Response) => {
     // TODO
     res.status(200);
 };
+
+export const forgotPassword = (req: Request, res: Response) => {
+    // TODO
+    res.status(200);
+}
