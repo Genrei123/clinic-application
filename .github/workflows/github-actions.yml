@@ -3,10 +3,11 @@ run-name: ${{ github.actor }} is testing out the backend functionality
 on: [push]
 
 jobs:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v1
-    - name: Run Backend tests
-    - work-directory: ./backend
-    - run: npm run test
+  Run-Backend-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run Backend tests
+      - work-directory: ./backend
+      - run: npm run test
   
