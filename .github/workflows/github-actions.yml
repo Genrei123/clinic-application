@@ -7,6 +7,6 @@ jobs:
   steps:
     - uses: actions/checkout@v1
     - name: Run Backend tests
-      work-directory: ./backend
-      run: npm run test
+    - work-directory: ./backend
+    - run: npm run test
   
