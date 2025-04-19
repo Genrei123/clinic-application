@@ -1,6 +1,6 @@
 name: Running Unit Tests
 run-name: ${{ github.actor }} is testing out the backend functionality
-on: [push]
+on: [push, pull_request]
 
 jobs:
   Run-Backend-Tests:
