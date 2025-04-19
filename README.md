@@ -34,3 +34,4 @@ The system is designed to streamline clinic operations, managem patient data eff
 
 ## Members
 - Cristobal,
+- Bolivar
