@@ -33,4 +33,4 @@ The system is designed to streamline clinic operations, managem patient data eff
 - Add or Define Branch Services
 
 ## Members
-- Cristobal, Genrey O.
+- Cristobal,
