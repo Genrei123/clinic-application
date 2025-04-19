@@ -1,4 +1,4 @@
-import { login, register, forgotPassword } from "../../controllers/auth/authController";
+import { login, register, forgotPassword } from "../../../controllers/auth/authController";
 import { Request, Response } from "express";
 
 describe('Login Controller', () => {
