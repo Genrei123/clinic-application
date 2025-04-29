@@ -29,8 +29,8 @@ The system is designed to streamline clinic operations, managem patient data eff
 - Filter Patients by branches, gender and expected date of confinement
 
 ## Branch and Services Management
-- Add New Clinic Branches
-- Add or Define Branch Services
+- Add New Clinic Branches.
+- Add or Define Branch Services.
 
 ## Members
 - Cristobal,
