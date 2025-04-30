@@ -14,9 +14,9 @@ const PORT = process.env.PORT;
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// app.get("/", (req, res) => {
-//     res.send("Hello, world!");
-// });
+app.get("/", (req, res) => {
+    res.send("Hello, world!");
+});
 
 app.use("/auth", authRoute);
 app.use("/patient", patientRoute);
