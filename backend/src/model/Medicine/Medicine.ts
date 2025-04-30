@@ -55,7 +55,8 @@ Medicine.init(
     {
         sequelize,
         modelName: 'Medicine',
-        tableName: 'Medicine' // Explicitly set the table name to match SQL schema
+        tableName: 'Medicine',
+        timestamps: false // Make sure this line is present
     }
 );
 
