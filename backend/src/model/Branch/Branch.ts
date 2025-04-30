@@ -30,7 +30,8 @@ Branch.init(
     {
         sequelize,
         modelName: 'Branch',
-        tableName: 'Branch' // Explicitly set the table name to match SQL schema
+        tableName: 'Branch', // Explicitly set the table name to match SQL schema
+        timestamps: false // Add this line to disable timestamps
     }
 );
 
