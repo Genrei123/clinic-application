@@ -7,6 +7,7 @@ import syncDB from './model/models';
 import authRoute from './routes/authRoute';
 import patientRoute from './routes/patientRoute';
 import inventoryRoute from './routes/inventoryRoute';
+import branchRoute from './routes/branchRoute';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoute);
 app.use("/patient", patientRoute);
 app.use("/inventory", inventoryRoute);
+app.use("/branch", branchRoute);
 
 app.listen(PORT, async () => {
     console.log(`Listening to port ${PORT}`);
