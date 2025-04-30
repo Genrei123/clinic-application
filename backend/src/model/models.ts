@@ -6,6 +6,7 @@ import Branch from "./Branch/Branch"
 import Employee from "./Employee/Employee"
 import Medicine from "./Medicine/Medicine"
 import Service from "./Service/Service"
+import Inventory from "./Inventory/Inventory"
 
 const syncDB = () => {
     User.sync();
@@ -16,6 +17,7 @@ const syncDB = () => {
     Branch.sync();
     Medicine.sync();
     Service.sync();
+    Inventory.sync();
 }
 
 export default syncDB;
