@@ -9,6 +9,7 @@ import patientRoute from './routes/patientRoute';
 import inventoryRoute from './routes/inventoryRoute';
 import branchRoute from './routes/branchRoute';
 import medicineRoute from './routes/medicineRoute';
+import serviceRoute from './routes/serviceRoute'; // Add this import
 
 const app = express();
 const PORT = process.env.PORT;
@@ -25,6 +26,7 @@ app.use("/patient", patientRoute);
 app.use("/inventory", inventoryRoute);
 app.use("/branch", branchRoute);
 app.use("/medicine", medicineRoute);
+app.use("/service", serviceRoute); // Add this line
 
 app.listen(PORT, async () => {
     console.log(`Listening to port ${PORT}`);

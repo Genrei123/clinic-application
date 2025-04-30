@@ -48,7 +48,8 @@ Service.init(
     {
         sequelize,
         modelName: 'Service',
-        tableName: 'Service' // Explicitly set the table name to match SQL schema
+        tableName: 'Service', // Explicitly set the table name to match SQL schema
+        timestamps: false // Add this line to disable timestamps
     }
 );
 
