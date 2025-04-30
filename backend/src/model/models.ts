@@ -8,6 +8,7 @@ import Medicine from "./Medicine/Medicine"
 import Service from "./Service/Service"
 import Inventory from "./Inventory/Inventory"
 import StatementOfAccount from "./StatementOfAccount/StatementOfAccount"
+import Baby from "./Baby/Baby"
 
 const syncDB = () => {
     User.sync();
@@ -20,6 +21,7 @@ const syncDB = () => {
     Service.sync();
     Inventory.sync();
     StatementOfAccount.sync();
+    Baby.sync();
 }
 
 export default syncDB;
