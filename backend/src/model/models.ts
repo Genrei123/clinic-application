@@ -5,6 +5,7 @@ import PhilMember from "./PhilMember/PhilMember"
 import Branch from "./Branch/Branch"
 import Employee from "./Employee/Employee"
 import Medicine from "./Medicine/Medicine"
+import Service from "./Service/Service"
 
 const syncDB = () => {
     User.sync();
@@ -14,6 +15,7 @@ const syncDB = () => {
     Employee.sync();
     Branch.sync();
     Medicine.sync();
+    Service.sync();
 }
 
 export default syncDB;
