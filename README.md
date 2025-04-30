@@ -33,6 +33,23 @@ The system is designed to streamline clinic operations, managem patient data eff
 - Add or Define Branch Services
 
 ## Members
-- Cristobal,
+- Cristobal, Genrey O.
 - Bolivar, Jhon Emerwin M.
 - Sandoval, Shunne Gabriel M.
+
+# How to run this project
+This project is in mono-repository style. The backend and the frontend are in the same repository to ensure that the project is centralized and both frontend and backend teams can access the source code of both stack seamlessly.
+
+## How to run the frontend
+- Clone the project
+- Naigate to frontend/ by cd clinic-application/frontend
+- npm install
+- npm run dev
+- Access localhost:5173/
+
+## How to run the backend
+- Clone the project
+- Navigate to backend/ by cd clinic-application/backend
+- npm install
+- npm run start OR nodemon
+- Access localhost:3000/ via Postman or CURL
