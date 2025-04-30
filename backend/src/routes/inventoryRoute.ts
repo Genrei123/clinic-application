@@ -1,10 +1,12 @@
 import { createInventory, readInventory, updateInventory, deleteInventory } from "../controllers/inventory/inventoryController";
 import { Router } from 'express';
 
-const router = Router();
+const inventoryRoute = Router();
 
-router.post('/inventory', createInventory);
-router.get('/inventory', readInventory);
-router.get('/inventory/:id', readInventory);
-router.put('/inventory', updateInventory);
-router.delete('/inventory', deleteInventory);
+inventoryRoute.post('/inventory', createInventory);
+inventoryRoute.get('/inventory', readInventory);
+inventoryRoute.get('/inventory/:id', readInventory);
+inventoryRoute.put('/inventory', updateInventory);
+inventoryRoute.delete('/inventory', deleteInventory);
+
+export default inventoryRoute;

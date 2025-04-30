@@ -1,7 +1,7 @@
 import User from "./User/User"
 
 const syncDB = () => {
-    User.sync({ alter: true });
+    User.sync();
 }
 
 export default syncDB;
