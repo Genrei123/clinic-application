@@ -90,7 +90,8 @@ Patient.init(
     {
         sequelize,
         modelName: 'Patient',
-        tableName: 'Patient'
+        tableName: 'Patient',
+        timestamps: false // Add this line to disable timestamps
     }
 );
 
