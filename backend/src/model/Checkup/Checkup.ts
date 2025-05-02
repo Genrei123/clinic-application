@@ -91,7 +91,8 @@ Checkup.init(
     {
         sequelize,
         modelName: 'Checkup',
-        tableName: 'Checkup' // Explicitly set the table name to match SQL schema
+        tableName: 'Checkup',
+        timestamps: false
     }
 );
 
