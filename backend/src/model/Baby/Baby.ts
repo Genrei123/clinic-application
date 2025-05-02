@@ -71,7 +71,8 @@ Baby.init(
     {
         sequelize,
         modelName: 'Baby',
-        tableName: 'Baby' // Explicitly set the table name to match SQL schema
+        tableName: 'Baby',
+        timestamps: false
     }
 );
 
