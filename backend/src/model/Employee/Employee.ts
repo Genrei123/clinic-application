@@ -102,7 +102,8 @@ Employee.init(
     {
         sequelize,
         modelName: 'Employee',
-        tableName: 'Employee' // Explicitly set the table name to match SQL schema
+        tableName: 'Employee', 
+        timestamps: false // Add this line to disable timestamps
     }
 );
 
