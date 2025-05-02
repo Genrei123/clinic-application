@@ -76,7 +76,8 @@ StatementOfAccount.init(
     {
         sequelize,
         modelName: 'StatementOfAccount',
-        tableName: 'StatementOfAccount' // Explicitly set the table name to match SQL schema
+        tableName: 'StatementOfAccount',
+        timestamps: false
     }
 );
 
