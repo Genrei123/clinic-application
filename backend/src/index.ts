@@ -11,7 +11,9 @@ import branchRoute from './routes/branchRoute';
 import medicineRoute from './routes/medicineRoute';
 import serviceRoute from './routes/serviceRoute';
 import checkupRoute from './routes/checkupRoute';
+import philMemberRoute from './routes/philMemberRoute';
 import employeeRoute from './routes/employeeRoute';
+
 
 
 const app = express();
@@ -31,8 +33,8 @@ app.use("/branch", branchRoute);
 app.use("/medicine", medicineRoute);
 app.use("/service", serviceRoute);
 app.use("/checkup", checkupRoute);
+app.use("/philmember", philMemberRoute);
 app.use("/employee", employeeRoute);
-
 
 app.listen(PORT, async () => {
     console.log(`Listening to port ${PORT}`);
