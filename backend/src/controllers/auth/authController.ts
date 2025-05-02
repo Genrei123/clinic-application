@@ -2,11 +2,7 @@
 import { Request, Response } from "express";
 import User from "../../model/User/User";
 import { comparePassword, hashPassword } from "../../service/authService";
-import jwt from 'jsonwebtoken';
-
-// Add this near the top of the file - in a production app you'd use environment variables
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-for-development';
-const JWT_EXPIRES_IN = '1h';
+import { createToken } from "../../middleware/JWT";
 
 export const login = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
@@ -28,12 +24,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         // Extract user data
         const userData = user.get({ plain: true });
         
-        // Generate token
-        const token = jwt.sign(
-            { userId: userData.id, username: userData.username },
-            JWT_SECRET,
-            { expiresIn: JWT_EXPIRES_IN }
-        );
+        // Generate token using the JWT middleware
+        const token = createToken(userData.id, userData.username);
 
         res.status(200).json({
             message: "Login successful",
@@ -53,21 +45,24 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
     try {
         const existingUsername = await User.findOne({ where: { username }});
         if (existingUsername) {
-            return res.status(400).json({ message: 'Username already exists. Please try another username.'});
+            res.status(400).json({ message: 'Username already exists. Please try another username.'});
+            return;
         }
 
         // Validate input
         if (!username || !password) {
-            return res.status(400).json({ message: 'Username and password are required' });
+            res.status(400).json({ message: 'Username and password are required' });
+            return;
         }
         
         if (password.length < 6) {
-            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+            res.status(400).json({ message: 'Password must be at least 6 characters' });
+            return;
         }
 
         // Create new user
@@ -77,20 +72,16 @@ export const register = async (req: Request, res: Response) => {
             password: encryptedPassword
         });
         
-        // Extract the user data from the model
+        // Extract user data
         const userData = newUser.get({ plain: true });
         
-        // Generate JWT token
-        const token = jwt.sign(
-            { userId: userData.id, username: userData.username },
-            JWT_SECRET,
-            { expiresIn: JWT_EXPIRES_IN }
-        );
-
+        // Generate token using the JWT middleware
+        const token = createToken(userData.id, userData.username);
+        
         console.log("User has been created:", userData.username);
         
         // Return success with token (don't include password in response)
-        return res.status(201).json({
+        res.status(201).json({
             message: "User registered successfully",
             user: {
                 id: userData.id,
@@ -101,7 +92,7 @@ export const register = async (req: Request, res: Response) => {
 
     } catch (error: any) {
         console.error("Registration error:", error);
-        return res.status(500).json({ 
+        res.status(500).json({ 
             message: "An error occurred during registration", 
             error: error.message 
         });
@@ -110,5 +101,5 @@ export const register = async (req: Request, res: Response) => {
 
 export const forgotPassword = (req: Request, res: Response) => {
     // TODO
-    res.status(200);
+    res.status(200).send("Forgot password functionality not yet implemented");
 };
