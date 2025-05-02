@@ -115,7 +115,8 @@ PhilMember.init(
     {
         sequelize,
         modelName: 'PhilMember',
-        tableName: 'PhilMember' // Explicitly set the table name to match SQL schema
+        tableName: 'PhilMember',
+        timestamps: false // Add this line to disable timestamps
     }
 );
 
