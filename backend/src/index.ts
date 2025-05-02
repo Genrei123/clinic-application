@@ -13,6 +13,7 @@ import serviceRoute from './routes/serviceRoute';
 import checkupRoute from './routes/checkupRoute';
 import philMemberRoute from './routes/philMemberRoute';
 import statementOfAccountRoute from './routes/statementOfAccountRoute';
+import employeeRoute from './routes/employeeRoute';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -33,6 +34,8 @@ app.use("/service", serviceRoute);
 app.use("/checkup", checkupRoute);
 app.use("/philmember", philMemberRoute);
 app.use("/account", statementOfAccountRoute);
+app.use("/employee", employeeRoute);
+
 
 app.listen(PORT, async () => {
     console.log(`Listening to port ${PORT}`);

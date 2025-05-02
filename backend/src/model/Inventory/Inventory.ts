@@ -49,7 +49,8 @@ Inventory.init(
     {
         sequelize,
         modelName: 'Inventory',
-        tableName: 'Inventory' // Explicitly set the table name to match SQL schema
+        tableName: 'Inventory', // Explicitly set the table name to match SQL schema
+        timestamps: false // Add this line to disable timestamps
     }
 );
 
