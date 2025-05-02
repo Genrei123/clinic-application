@@ -1,9 +1,11 @@
-import { login, register, forgotPassword } from "../controllers/auth/authController";
-import { Router } from 'express';
+import { login, register, forgotPassword, verifyEmail } from "../controllers/auth/authController";
+import { Router, RequestHandler } from 'express';
 
 const authRoute = Router();
-authRoute.post('/login', login);
-authRoute.post('/register', register);
-authRoute.put('/forgotPassword', forgotPassword);
+
+authRoute.post('/login', login as RequestHandler);
+authRoute.post('/register', register as RequestHandler);
+authRoute.get('/verify', verifyEmail as RequestHandler);
+authRoute.put('/forgotPassword', forgotPassword as RequestHandler);
 
 export default authRoute;
