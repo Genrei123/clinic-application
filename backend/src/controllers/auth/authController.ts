@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../../model/User/User";
 import { comparePassword, hashPassword } from "../../service/authService";
-import { sendVerificationEmail } from "../../service/emailService";
+import { sendVerificationEmail, sendPasswordResetEmail } from "../../service/emailService";
 import crypto from 'crypto';
 import { sequelize } from "../../configs/database"; // Add this import
 import { Op } from "sequelize"; // Add this import
@@ -130,6 +130,99 @@ export const verifyEmail = async (req: Request, res: Response) => {
 };
 
 export const forgotPassword = async (req: Request, res: Response) => {
-    // TODO: Implement forgot password functionality
-    res.status(200).json({ message: "Forgot password feature coming soon" });
+    const { email } = req.body;
+    
+    if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+    }
+
+    try {
+        // Find user with this email
+        const user = await User.findOne({ where: { email } });
+        
+        if (!user) {
+            // For security reasons, still return success even if email doesn't exist
+            // This prevents user enumeration attacks
+            return res.status(200).json({ 
+                message: "If your email is registered, you will receive password reset instructions."
+            });
+        }
+
+        // Generate reset token (same mechanism as verification token)
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetExpires = new Date(Date.now() + parseInt(process.env.RESET_TOKEN_EXPIRATION || '3600000'));
+        
+        // Save token to user
+        await User.update(
+            { 
+                verificationToken: resetToken, 
+                verificationExpires: resetExpires 
+            },
+            { where: { id: user.dataValues.id } }
+        );
+
+        // Send password reset email
+        const emailSent = await sendPasswordResetEmail(email, resetToken);
+        
+        if (emailSent) {
+            return res.status(200).json({ 
+                message: "If your email is registered, you will receive password reset instructions." 
+            });
+        } else {
+            console.error("Failed to send password reset email");
+            // Still return success for security reasons
+            return res.status(200).json({ 
+                message: "If your email is registered, you will receive password reset instructions." 
+            });
+        }
+    } catch (error) {
+        console.error("Password reset error:", error);
+        res.status(500).json({ 
+            message: "Password reset request failed", 
+            error: error instanceof Error ? error.message : 'Unknown error occurred'
+        });
+    }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
+    
+    if (!token || !newPassword) {
+        return res.status(400).json({ message: "Token and new password are required" });
+    }
+
+    try {
+        // Find user with this token and check it's not expired
+        const user = await User.findOne({ 
+            where: { 
+                verificationToken: token,
+                verificationExpires: { [Op.gt]: new Date() }
+            }
+        });
+        
+        if (!user) {
+            return res.status(400).json({ message: "Invalid or expired password reset token" });
+        }
+
+        // Hash the new password
+        const hashedPassword = await hashPassword(newPassword);
+        
+        // Update user password and clear token
+        await User.update(
+            { 
+                password: hashedPassword,
+                verificationToken: null,
+                verificationExpires: null
+            },
+            { where: { id: user.dataValues.id } }
+        );
+
+        return res.status(200).json({ message: "Password has been reset successfully. You can now log in with your new password." });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ 
+            message: "Password reset failed", 
+            error: error instanceof Error ? error.message : 'Unknown error occurred'
+        });
+    }
 };
