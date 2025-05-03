@@ -5,6 +5,8 @@ import { sendVerificationEmail, sendPasswordResetEmail } from "../../service/ema
 import crypto from 'crypto';
 import { sequelize } from "../../configs/database"; // Add this import
 import { Op } from "sequelize"; // Add this import
+import fs from 'fs';
+import path from 'path';
 
 export const login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
@@ -224,5 +226,38 @@ export const resetPassword = async (req: Request, res: Response) => {
             message: "Password reset failed", 
             error: error instanceof Error ? error.message : 'Unknown error occurred'
         });
+    }
+};
+
+export const renderResetPasswordForm = async (req: Request, res: Response) => {
+    const { token } = req.query;
+    
+    if (!token) {
+        return res.status(400).send('Token is required');
+    }
+    
+    try {
+        // Check if token is valid and not expired
+        const user = await User.findOne({ 
+            where: { 
+                verificationToken: token,
+                verificationExpires: { [Op.gt]: new Date() }
+            }
+        });
+        
+        if (!user) {
+            return res.status(400).send('Invalid or expired token');
+        }
+        
+        // Read the HTML file
+        const filePath = path.join(__dirname, '../../templates/password-reset-form.html');
+        let html = fs.readFileSync(filePath, 'utf8');
+        
+        // Send the HTML response
+        res.setHeader('Content-Type', 'text/html');
+        res.status(200).send(html);
+    } catch (error) {
+        console.error('Error rendering password reset form:', error);
+        res.status(500).send('Error loading password reset page');
     }
 };
