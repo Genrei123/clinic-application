@@ -1,29 +1,51 @@
 // TODO: Implement Authentication
-import { Request ,Response } from "express";
+import { Request, Response } from "express";
 import User from "../../model/User/User";
 import { comparePassword, hashPassword } from "../../service/authService";
+import { createToken } from "../../middleware/JWT";
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
     try {
+        // Find user
+        const user = await User.findOne({ where: { username }});
+        if (!user) {
+            res.status(401).json({ message: "Username or password does not match" });
+            return;
+        }
+        
+        // Verify password
         const result = await comparePassword(username, password);
         if (!result) {
-            res.status(401);
-            res.send("Username or password does not match");
+            res.status(401).json({ message: "Username or password does not match" });
+            return;
         }
 
-        // Give token
-        res.status(200);
-        res.send("Successful login!");
+        // Extract user data
+        const userData = user.get({ plain: true });
+        
+        // Generate token using the JWT middleware
+        const token = createToken(userData.id, userData.username);
 
+        res.status(200).json({
+            message: "Login successful",
+            user: {
+                id: userData.id,
+                username: userData.username
+            },
+            token: token
+        });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in logging in: ", error);
+        res.status(500).json({ 
+            message: "An error occurred during login", 
+            error: error.message 
+        });
     }
-    res.status(200);
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
     try {
         const existingUsername = await User.findOne({ where: { username }});
@@ -32,22 +54,52 @@ export const register = async (req: Request, res: Response) => {
             return;
         }
 
+        // Validate input
+        if (!username || !password) {
+            res.status(400).json({ message: 'Username and password are required' });
+            return;
+        }
+        
+        if (password.length < 6) {
+            res.status(400).json({ message: 'Password must be at least 6 characters' });
+            return;
+        }
+
         // Create new user
         const encryptedPassword = await hashPassword(password);
-        const newUser = await User.create({ username: username, password: encryptedPassword});
-        console.log("User has been created: ", newUser);
-        res.status(200).json({message: "User with username has been created: ", newUser});
-        return;
+        const newUser = await User.create({ 
+            username: username, 
+            password: encryptedPassword
+        });
+        
+        // Extract user data
+        const userData = newUser.get({ plain: true });
+        
+        // Generate token using the JWT middleware
+        const token = createToken(userData.id, userData.username);
+        
+        console.log("User has been created:", userData.username);
+        
+        // Return success with token (don't include password in response)
+        res.status(201).json({
+            message: "User registered successfully",
+            user: {
+                id: userData.id,
+                username: userData.username
+            },
+            token: token
+        });
 
-    } catch (error) {
-        res.status(400).json({ message: error });
+    } catch (error: any) {
+        console.error("Registration error:", error);
+        res.status(500).json({ 
+            message: "An error occurred during registration", 
+            error: error.message 
+        });
     }
-
-    // Something went wrong dito
-    res.status(500);
 };
 
 export const forgotPassword = (req: Request, res: Response) => {
     // TODO
-    res.status(200);
-}
+    res.status(200).send("Forgot password functionality not yet implemented");
+};
