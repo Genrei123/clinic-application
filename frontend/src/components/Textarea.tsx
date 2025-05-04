@@ -17,7 +17,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
   value: controlledValue,
   defaultValue = '',
   onChange,
-  placeholder = 'Type your message...',
+  placeholder = 'Type your message here...',
   disabled = false,
   label,
   maxLength,
@@ -25,22 +25,18 @@ export const TextArea: React.FC<TextAreaProps> = ({
   className = '',
   required = false,
 }) => {
-  // For uncontrolled component
   const [internalValue, setInternalValue] = useState(defaultValue);
   
-  // Determine if component is controlled or uncontrolled
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
   
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     
-    // Update internal state if uncontrolled
     if (!isControlled) {
       setInternalValue(newValue);
     }
     
-    // Call onChange prop if provided
     if (onChange) {
       onChange(newValue);
     }
