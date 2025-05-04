@@ -23,25 +23,20 @@ export const Slider: React.FC<SliderProps> = ({
   label,
   className = '',
 }) => {
-  // Use internal state for uncontrolled component, or controlled value if provided
   const [internalValue, setInternalValue] = useState(defaultValue || min);
   
-  // Determine if component is controlled or uncontrolled
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
   
-  // Calculate the percentage for slider position
   const percentage = ((currentValue - min) / (max - min)) * 100;
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(e.target.value);
     
-    // Update internal state if uncontrolled
     if (!isControlled) {
       setInternalValue(newValue);
     }
     
-    // Call onChange prop if provided
     if (onChange) {
       onChange(newValue);
     }
@@ -54,17 +49,15 @@ export const Slider: React.FC<SliderProps> = ({
     const clickPosition = e.clientX - sliderRect.left;
     const sliderWidth = sliderRect.width;
     
-    // Calculate new value based on click position
     const newValue = min + (clickPosition / sliderWidth) * (max - min);
     const steppedValue = Math.round(newValue / step) * step;
     const boundedValue = Math.max(min, Math.min(max, steppedValue));
     
-    // Update internal state if uncontrolled
     if (!isControlled) {
       setInternalValue(boundedValue);
     }
     
-    // Call onChange prop if provided
+
     if (onChange) {
       onChange(boundedValue);
     }
@@ -106,10 +99,8 @@ export const Slider: React.FC<SliderProps> = ({
         }}
       >
         <div className="relative w-full" onClick={handleSliderClick}>
-          {/* Custom track - made thicker for easier targeting */}
           <div className="w-full h-2 bg-gray-200 rounded-full"
                style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}>
-            {/* Filled portion of track */}
             <div 
               className="h-2 rounded-full" 
               style={{ 
@@ -119,7 +110,6 @@ export const Slider: React.FC<SliderProps> = ({
             />
           </div>
           
-          {/* Input slider */}
           <input
             type="range"
             min={min}
@@ -133,13 +123,11 @@ export const Slider: React.FC<SliderProps> = ({
               WebkitAppearance: 'none',
               appearance: 'none',
               pointerEvents: disabled ? 'none' : 'auto',
-              marginTop: '-10px' // Increase vertical touch area
+              marginTop: '-10px'
             }}
             onMouseDown={handleMouseDown}
             onTouchStart={handleMouseDown}
           />
-          
-          {/* Custom thumb */}
           <div 
             className={`absolute top-1/2 w-6 h-6 rounded-full transform -translate-y-1/2 -translate-x-1/2 ${
               disabled ? 'opacity-50' : 'shadow-lg hover:shadow-xl'
@@ -157,24 +145,3 @@ export const Slider: React.FC<SliderProps> = ({
     </div>
   );
 };
-
-export default function SliderDemo() {
-  const [sliderValue, setSliderValue] = useState(50);
-  
-  const handleChange = (value: number) => {
-    setSliderValue(value);
-    console.log('Slider value:', value);
-  };
-
-  return (
-    <div className="flex flex-col space-y-8 p-6">
-      
-      <div className="space-y-6">
-        <Slider 
-          onChange={handleChange}
-          label="Adjust value"
-        />
-      </div>
-    </div>
-  );
-}
