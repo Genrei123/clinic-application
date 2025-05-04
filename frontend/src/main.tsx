@@ -4,10 +4,10 @@ import './index.css'
 import App from './App.tsx'
 import ErrorModal from './components/ErrorModal.tsx'
 import SuccessModal from './components/SuccessModal.tsx'
-import Button from './components/Button.tsx'
+import Slider from './components/Slider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Slider />
   </StrictMode>,
 )
