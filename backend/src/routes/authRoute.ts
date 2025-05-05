@@ -1,11 +1,13 @@
-import { login, register, forgotPassword } from "../controllers/auth/authController";
-import express, { Request, Response } from 'express';
+import { login, register, forgotPassword, verifyEmail, resetPassword, renderResetPasswordForm } from "../controllers/auth/authController";
+import { Router, RequestHandler } from 'express';
 
-const authRoute = express.Router();
+const authRoute = Router();
 
-// Use a two-step type assertion to avoid the type error
-authRoute.post('/login', login);
-authRoute.post('/register', register);
-authRoute.put('/forgotPassword', forgotPassword);
+authRoute.post('/login', login as RequestHandler);
+authRoute.post('/register', register as RequestHandler);
+authRoute.get('/verify', verifyEmail as RequestHandler);
+authRoute.post('/forgot-password', forgotPassword as RequestHandler);
+authRoute.get('/reset-password', renderResetPasswordForm as RequestHandler);
+authRoute.post('/reset-password', resetPassword as RequestHandler);
 
 export default authRoute;
