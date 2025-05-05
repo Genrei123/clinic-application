@@ -7,6 +7,8 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
   variant?: 'primary' | 'secondary' | 'outline';
   className?: string;
+  children?: React.ReactNode;
+  type?: "button" | "submit" | "reset";
 }
 
 // Export the Button component directly
@@ -17,6 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   variant = 'primary',
   className = '',
+  
 }) => {
   // Size classes
   const sizeClasses = {
