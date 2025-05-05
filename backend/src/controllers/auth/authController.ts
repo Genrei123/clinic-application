@@ -3,60 +3,88 @@ import User from "../../model/User/User";
 import { comparePassword, hashPassword } from "../../service/authService";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../../service/emailService";
 import crypto from 'crypto';
-import { sequelize } from "../../configs/database"; // Add this import
-import { Op } from "sequelize"; // Add this import
+import { sequelize } from "../../configs/database";
+import { Op } from "sequelize";
 import fs from 'fs';
 import path from 'path';
+import { createToken } from "../../middleware/JWT";
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
     try {
+        // Find user
         const user = await User.findOne({ where: { username } });
         if (!user) {
-            return res.status(401).json({ message: "Invalid username or password" });
+            res.status(401).json({ message: "Invalid username or password" });
+            return;
         }
 
+        // Verify password
         const result = await comparePassword(username, password);
         if (!result) {
-            return res.status(401).json({ message: "Invalid username or password" });
+            res.status(401).json({ message: "Invalid username or password" });
+            return;
         }
 
+        // Check if email is verified (from Email-Authentication branch)
         if (!user.dataValues.isVerified) {
-            return res.status(403).json({ 
+            res.status(403).json({ 
                 message: "Please verify your email before logging in",
                 email: user.dataValues.email 
             });
+            return;
         }
 
-        // Give token
+        // Extract user data
+        const userData = user.get({ plain: true });
+        
+        // Generate token using the JWT middleware
+        const token = createToken(userData.id, userData.username);
+
         res.status(200).json({
             message: "Login successful",
             user: {
-                id: user.dataValues.id,
-                username: user.dataValues.username,
-                email: user.dataValues.email
-            }
+                id: userData.id,
+                username: userData.username,
+                email: userData.email
+            },
+            token: token
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in logging in: ", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ 
+            message: "An error occurred during login", 
+            error: error.message 
+        });
     }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<void> => {
     const { username, password, email } = req.body;
     try {
         // Check if username or email already exists
         const existingUser = await User.findOne({ 
             where: { 
-                [Op.or]: [{ username }, { email }] // Use Op instead of sequelize.Op
+                [Op.or]: [{ username }, { email }]
             }
         });
         
         if (existingUser) {
             const field = existingUser.dataValues.username === username ? "username" : "email";
-            return res.status(400).json({ message: `This ${field} is already registered.` });
+            res.status(400).json({ message: `This ${field} is already registered.` });
+            return;
+        }
+
+        // Validate input
+        if (!username || !password) {
+            res.status(400).json({ message: 'Username and password are required' });
+            return;
+        }
+        
+        if (password.length < 6) {
+            res.status(400).json({ message: 'Password must be at least 6 characters' });
+            return;
         }
 
         // Generate verification token
@@ -74,25 +102,31 @@ export const register = async (req: Request, res: Response) => {
             isVerified: false
         });
 
+        // Generate token using the JWT middleware
+        const userData = newUser.get({ plain: true });
+        const token = createToken(userData.id, userData.username);
+
         // Send verification email
         const emailSent = await sendVerificationEmail(email, verificationToken);
         
         if (emailSent) {
             res.status(201).json({
                 message: "Registration successful! Please check your email to verify your account.",
-                userId: newUser.dataValues.id
+                userId: userData.id,
+                token: token
             });
         } else {
             res.status(500).json({ 
                 message: "User created but failed to send verification email. Please contact support.",
-                userId: newUser.dataValues.id
+                userId: userData.id,
+                token: token
             });
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Registration error:", error);
         res.status(500).json({ 
             message: "Registration failed", 
-            error: error instanceof Error ? error.message : 'Unknown error occurred'
+            error: error.message
         });
     }
 };
@@ -108,7 +142,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
         const user = await User.findOne({ 
             where: { 
                 verificationToken: token,
-                verificationExpires: { [Op.gt]: new Date() } // Use Op instead of sequelize.Op
+                verificationExpires: { [Op.gt]: new Date() }
             }
         });
 
