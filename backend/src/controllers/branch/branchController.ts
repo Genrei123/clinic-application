@@ -1,21 +1,33 @@
 import { Request, Response } from 'express';
 import Branch from '../../model/Branch/Branch';
+import { logDatabaseAction } from '../../middleware/loggingMiddleware';
 
 export const createBranch = async (req: Request, res: Response) => {
     try {
-        const newBranch = await Branch.create(req.body);
-        res.status(201).json({
-            success: true,
-            message: 'Branch created successfully',
-            data: newBranch
+        const { BranchName, BranchLocation, BranchStatus, BranchRequest } = req.body;
+        
+        const newBranch = await Branch.create({
+            BranchName,
+            BranchLocation,
+            BranchStatus,
+            BranchRequest
         });
+        
+        // Log the creation
+        await logDatabaseAction(
+            'Branch',
+            'CREATE',
+            newBranch.BranchID,
+            req.user?.id || null,
+            null,
+            newBranch,
+            `Branch '${BranchName}' created`
+        );
+        
+        res.status(201).json(newBranch);
     } catch (error) {
-        console.error('Error creating branch:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to create branch',
-            error: error
-        });
+        console.error(error);
+        res.status(500).json({ message: 'Failed to create branch' });
     }
 }
 
@@ -61,6 +73,18 @@ export const updateBranch = async (req: Request, res: Response) => {
         
         if (updated) {
             const updatedBranch = await Branch.findByPk(id);
+            
+            // Log the update
+            await logDatabaseAction(
+                'Branch',
+                'UPDATE',
+                id,
+                req.user?.id || null,
+                req.body,
+                updatedBranch,
+                `Branch '${updatedBranch?.BranchName}' updated`
+            );
+            
             return res.status(200).json({
                 success: true,
                 message: 'Branch updated successfully',
@@ -90,6 +114,17 @@ export const deleteBranch = async (req: Request, res: Response) => {
         });
         
         if (deleted) {
+            // Log the deletion
+            await logDatabaseAction(
+                'Branch',
+                'DELETE',
+                id,
+                req.user?.id || null,
+                null,
+                null,
+                `Branch with ID '${id}' deleted`
+            );
+            
             return res.status(200).json({
                 success: true,
                 message: 'Branch deleted successfully'
