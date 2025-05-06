@@ -37,7 +37,7 @@ Branch.init(
     sequelize,
     modelName: 'Branch',
     tableName: 'Branch',
-    timestamps: true
+    timestamps: false
   }
 );
 
