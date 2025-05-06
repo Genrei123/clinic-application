@@ -2,7 +2,12 @@ import { Request, Response } from 'express';
 import Branch from '../../model/Branch/Branch';
 import { logDatabaseAction } from '../../middleware/loggingMiddleware';
 
-export const createBranch = async (req: Request, res: Response) => {
+// Add this type definition in the branchController.ts file
+interface AuthRequest extends Request {
+  user?: { id: number; username: string; };
+}
+
+export const createBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { BranchName, BranchLocation, BranchStatus, BranchRequest } = req.body;
         
@@ -39,7 +44,7 @@ export const createBranch = async (req: Request, res: Response) => {
     }
 }
 
-export const readBranch = async (req: Request, res: Response) => {
+export const readBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         
@@ -88,7 +93,7 @@ export const readBranch = async (req: Request, res: Response) => {
     }
 }
 
-export const updateBranch = async (req: Request, res: Response) => {
+export const updateBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         
@@ -141,7 +146,7 @@ export const updateBranch = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteBranch = async (req: Request, res: Response) => {
+export const deleteBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         
