@@ -57,7 +57,7 @@ export const readBranch = async (req: AuthRequest, res: Response) => {
                 });
             }
 
-            // Log the read operation
+            // Log the read operation for a single branch
             await logDatabaseAction(
                 'Branch',
                 'READ',
@@ -76,7 +76,17 @@ export const readBranch = async (req: AuthRequest, res: Response) => {
         } else {
             const branches = await Branch.findAll();
 
-            // No need to log listing all branches to avoid excessive logging
+            // Add logging for listing all branches
+            await logDatabaseAction(
+                'Branch',
+                'READ',
+                0, // Use 0 or null to indicate "all records"
+                req.user?.id || null,
+                null,
+                { count: branches.length }, // Log branch count instead of full data to avoid huge logs
+                `All branches retrieved (${branches.length} records)`,
+                req
+            );
             
             return res.status(200).json({
                 success: true,
