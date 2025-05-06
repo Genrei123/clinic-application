@@ -1,0 +1,23 @@
+{
+  "name": "jimirene-electron-app",
+  "version": "1.0.0",
+  "description": "Clinic Management application with auto-update capabilities",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Genrei123/clinic-application.git"
+  },
+  "author": "dev-team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Genrei123/clinic-application/issues"
+  },
+  "homepage": "https://github.com/Genrei123/clinic-application#readme",
+  "devDependencies": {
+    "electron": "^36.1.0"
+  }
+}
