@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Logs from '../../model/Logs/Logs';
 
-export const getLogs = async (req: Request, res: Response) => {
+export const getLogs = async (req: Request, res: Response): Promise<void> => {
     try {
         const { table, action, limit = 100 } = req.query;
         
@@ -21,14 +21,14 @@ export const getLogs = async (req: Request, res: Response) => {
             order: [['Timestamp', 'DESC']]
         });
         
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             count: logs.length,
             data: logs
         });
     } catch (error) {
         console.error('Error fetching logs:', error);
-        return res.status(500).json({
+        res.status(500).json({
             success: false,
             message: 'Failed to retrieve logs',
             error: error

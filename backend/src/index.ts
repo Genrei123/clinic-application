@@ -15,7 +15,7 @@ import philMemberRoute from './routes/philMemberRoute';
 import statementOfAccountRoute from './routes/statementOfAccountRoute';
 import babyRoute from './routes/babyRoute';
 import employeeRoute from './routes/employeeRoute';
-
+import logsRoute from './routes/logsRoute';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -38,6 +38,7 @@ app.use("/philmember", philMemberRoute);
 app.use("/account", statementOfAccountRoute);
 app.use("/baby", babyRoute);
 app.use("/employee", employeeRoute);
+app.use('/logs', logsRoute);
 
 app.listen(PORT, async () => {
     console.log(`Listening to port ${PORT}`);
