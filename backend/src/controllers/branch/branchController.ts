@@ -20,14 +20,22 @@ export const createBranch = async (req: Request, res: Response) => {
             newBranch.BranchID,
             req.user?.id || null,
             null,
-            newBranch,
-            `Branch '${BranchName}' created`
+            newBranch.toJSON(),
+            `Branch '${BranchName}' created`,
+            req
         );
         
-        res.status(201).json(newBranch);
+        res.status(201).json({
+            success: true,
+            data: newBranch
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to create branch' });
+        console.error('Error creating branch:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Failed to create branch',
+            error: error
+        });
     }
 }
 
@@ -43,12 +51,28 @@ export const readBranch = async (req: Request, res: Response) => {
                     message: 'Branch not found'
                 });
             }
+
+            // Log the read operation
+            await logDatabaseAction(
+                'Branch',
+                'READ',
+                parseInt(id),
+                req.user?.id || null,
+                null,
+                branch.toJSON(),
+                `Branch '${branch.BranchName}' viewed`,
+                req
+            );
+
             return res.status(200).json({
                 success: true,
                 data: branch
             });
         } else {
             const branches = await Branch.findAll();
+
+            // No need to log listing all branches to avoid excessive logging
+            
             return res.status(200).json({
                 success: true,
                 data: branches
@@ -67,6 +91,16 @@ export const readBranch = async (req: Request, res: Response) => {
 export const updateBranch = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+        
+        // Get the branch before update for logging
+        const oldBranch = await Branch.findByPk(id);
+        if (!oldBranch) {
+            return res.status(404).json({
+                success: false,
+                message: 'Branch not found'
+            });
+        }
+        
         const [updated] = await Branch.update(req.body, {
             where: { BranchID: id }
         });
@@ -78,11 +112,12 @@ export const updateBranch = async (req: Request, res: Response) => {
             await logDatabaseAction(
                 'Branch',
                 'UPDATE',
-                id,
+                parseInt(id),
                 req.user?.id || null,
-                req.body,
-                updatedBranch,
-                `Branch '${updatedBranch?.BranchName}' updated`
+                oldBranch.toJSON(),
+                updatedBranch?.toJSON() || null,
+                `Branch '${updatedBranch?.BranchName}' updated`,
+                req
             );
             
             return res.status(200).json({
@@ -109,6 +144,16 @@ export const updateBranch = async (req: Request, res: Response) => {
 export const deleteBranch = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+        
+        // Get the branch before delete for logging
+        const branchToDelete = await Branch.findByPk(id);
+        if (!branchToDelete) {
+            return res.status(404).json({
+                success: false,
+                message: 'Branch not found'
+            });
+        }
+        
         const deleted = await Branch.destroy({
             where: { BranchID: id }
         });
@@ -118,11 +163,12 @@ export const deleteBranch = async (req: Request, res: Response) => {
             await logDatabaseAction(
                 'Branch',
                 'DELETE',
-                id,
+                parseInt(id),
                 req.user?.id || null,
+                branchToDelete.toJSON(),
                 null,
-                null,
-                `Branch with ID '${id}' deleted`
+                `Branch '${branchToDelete.BranchName}' deleted`,
+                req
             );
             
             return res.status(200).json({
