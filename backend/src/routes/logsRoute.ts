@@ -1,12 +1,9 @@
-import { Router, RequestHandler } from 'express';
+import { Router } from 'express';
 import { getLogs } from '../controllers/logs/logsController';
 
 const logsRoute = Router();
 
-// Option 1: Remove the type casting
+// No type casting needed now
 logsRoute.get('/', getLogs);
-
-// OR Option 2: Keep the casting but with the correct return type
-// logsRoute.get('/', getLogs as RequestHandler);
 
 export default logsRoute;

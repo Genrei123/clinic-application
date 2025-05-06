@@ -45,5 +45,6 @@ app.listen(PORT, async () => {
     console.log(`Connecting to database.....`);
     await initDB();
     console.log(`Syncing to database......`);
-    // await syncDB();
+    await syncDB(); // Uncomment this line
+    console.log("Database synchronization complete!");
 });
