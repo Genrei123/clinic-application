@@ -13,7 +13,7 @@ export const logDatabaseAction = async (
     newValues: object | null,
     description: string,
     req?: Request
-) => {
+): Promise<void> => {
     try {
         await Logs.create({
             TableName: tableName,

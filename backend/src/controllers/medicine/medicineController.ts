@@ -4,29 +4,7 @@ import { logDatabaseAction } from '../../middleware/loggingMiddleware';
 
 export const createMedicine = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { 
-            MedicineName, 
-            MedicineQuantity, 
-            MedicinePrice, 
-            ManufactureDate, 
-            ExpirationDate, 
-            BranchID,
-            MedicineStatus,
-            MedicineDescription,
-            MedicineIMG
-        } = req.body;
-        
-        const newMedicine = await Medicine.create({
-            MedicineName,
-            MedicineQuantity,
-            MedicinePrice,
-            ManufactureDate,
-            ExpirationDate,
-            BranchID,
-            MedicineStatus,
-            MedicineDescription,
-            MedicineIMG
-        });
+        const newMedicine = await Medicine.create(req.body);
         
         // Log the creation
         await logDatabaseAction(
@@ -36,7 +14,7 @@ export const createMedicine = async (req: Request, res: Response): Promise<void>
             req.user?.id || null,
             null,
             newMedicine.toJSON(),
-            `Medicine '${MedicineName}' created`,
+            `Medicine '${newMedicine.MedicineName}' created`,
             req
         );
         
@@ -47,84 +25,74 @@ export const createMedicine = async (req: Request, res: Response): Promise<void>
         });
     } catch (error) {
         console.error('Error creating medicine:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
             message: 'Failed to create medicine',
             error: error
         });
     }
-};
+}
 
-export const getAllMedicine = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const medicines = await Medicine.findAll();
-        
-        // Log the read operation
-        await logDatabaseAction(
-            'Medicine',
-            'READ',
-            0, // 0 indicates retrieving all records
-            req.user?.id || null,
-            null,
-            { count: medicines.length },
-            `All medicines retrieved (${medicines.length} records)`,
-            req
-        );
-        
-        res.status(200).json({
-            success: true,
-            count: medicines.length,
-            data: medicines
-        });
-    } catch (error) {
-        console.error('Error fetching medicines:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch medicines',
-            error: error
-        });
-    }
-};
-
-export const getMedicineById = async (req: Request, res: Response): Promise<void> => {
+export const readMedicine = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
         
-        const medicine = await Medicine.findByPk(id);
-        
-        if (!medicine) {
-            res.status(404).json({
-                success: false,
-                message: 'Medicine not found'
+        if (id) {
+            const medicine = await Medicine.findByPk(id);
+            if (!medicine) {
+                res.status(404).json({
+                    success: false,
+                    message: 'Medicine not found'
+                });
+                return;
+            }
+            
+            // Log the read operation
+            await logDatabaseAction(
+                'Medicine',
+                'READ',
+                medicine.MedicineID,
+                req.user?.id || null,
+                null,
+                medicine.toJSON(),
+                `Medicine '${medicine.MedicineName}' viewed`,
+                req
+            );
+            
+            res.status(200).json({
+                success: true,
+                data: medicine
             });
-            return;
+        } else {
+            const medicines = await Medicine.findAll();
+            
+            // Log the bulk read operation
+            await logDatabaseAction(
+                'Medicine',
+                'READ',
+                0, // Use 0 to indicate "all records"
+                req.user?.id || null,
+                null,
+                { count: medicines.length },
+                `All medicines retrieved (${medicines.length} records)`,
+                req
+            );
+            
+            res.status(200).json({
+                success: true,
+                count: medicines.length,
+                data: medicines
+            });
         }
-        
-        // Log the read operation
-        await logDatabaseAction(
-            'Medicine',
-            'READ',
-            medicine.MedicineID,
-            req.user?.id || null,
-            null,
-            medicine.toJSON(),
-            `Medicine '${medicine.MedicineName}' viewed`,
-            req
-        );
-        
-        res.status(200).json({
-            success: true,
-            data: medicine
-        });
     } catch (error) {
-        console.error('Error fetching medicine:', error);
+        console.error('Error fetching medicine(s):', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch medicine',
+            message: 'Failed to fetch medicine data',
             error: error
         });
     }
-};
+}
 
 export const updateMedicine = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -166,13 +134,12 @@ export const updateMedicine = async (req: Request, res: Response): Promise<void>
                 message: 'Medicine updated successfully',
                 data: updatedMedicine
             });
-            return;
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'Medicine not found'
+            });
         }
-        
-        res.status(404).json({
-            success: false,
-            message: 'Medicine not found'
-        });
     } catch (error) {
         console.error('Error updating medicine:', error);
         res.status(500).json({
@@ -181,7 +148,7 @@ export const updateMedicine = async (req: Request, res: Response): Promise<void>
             error: error
         });
     }
-};
+}
 
 export const deleteMedicine = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -220,13 +187,12 @@ export const deleteMedicine = async (req: Request, res: Response): Promise<void>
                 success: true,
                 message: 'Medicine deleted successfully'
             });
-            return;
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'Medicine not found'
+            });
         }
-        
-        res.status(404).json({
-            success: false,
-            message: 'Medicine not found'
-        });
     } catch (error) {
         console.error('Error deleting medicine:', error);
         res.status(500).json({
@@ -235,4 +201,4 @@ export const deleteMedicine = async (req: Request, res: Response): Promise<void>
             error: error
         });
     }
-};
+}
