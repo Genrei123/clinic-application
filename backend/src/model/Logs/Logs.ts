@@ -27,8 +27,11 @@ Logs.init(
       defaultValue: DataTypes.NOW
     },
     ActionType: {
-      type: DataTypes.ENUM('CREATE', 'READ', 'UPDATE', 'DELETE'),
-      allowNull: false
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      validate: {
+        isIn: [['CREATE', 'READ', 'UPDATE', 'DELETE']]
+      }
     },
     TableName: {
       type: DataTypes.STRING(50),

@@ -1,5 +1,5 @@
 // filepath: backend/src/middleware/loggingMiddleware.ts
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import Logs from '../model/Logs/Logs';
 
 type ActionType = 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
@@ -15,7 +15,6 @@ export const logDatabaseAction = async (
     req?: Request
 ) => {
     try {
-        // Create log entry
         await Logs.create({
             TableName: tableName,
             ActionType: actionType,

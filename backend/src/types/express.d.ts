@@ -6,7 +6,6 @@ declare global {
       user?: {
         id: number;
         username: string;
-        // Add other user properties you need
       };
     }
   }

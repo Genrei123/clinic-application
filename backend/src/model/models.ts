@@ -9,7 +9,7 @@ import Service from "./Service/Service"
 import Inventory from "./Inventory/Inventory"
 import StatementOfAccount from "./StatementOfAccount/StatementOfAccount"
 import Baby from "./Baby/Baby"
-import Logs from "./Logs/Logs" // Add this import
+import Logs from "./Logs/Logs"
 
 const syncDB = () => {
     User.sync();
@@ -23,7 +23,7 @@ const syncDB = () => {
     Inventory.sync();
     StatementOfAccount.sync();
     Baby.sync();
-    Logs.sync(); // Add this line
+    Logs.sync();
 }
 
 export default syncDB;

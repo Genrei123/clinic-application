@@ -1,12 +1,18 @@
-import { Router, RequestHandler } from 'express';
-import { createMedicine, readMedicine, updateMedicine, deleteMedicine } from '../controllers/medicine/medicineController';
+import { Router } from 'express';
+import { 
+    createMedicine, 
+    getAllMedicine, 
+    getMedicineById, 
+    updateMedicine, 
+    deleteMedicine 
+} from '../controllers/medicine/medicineController';
 
 const medicineRoute = Router();
 
-medicineRoute.post('/', createMedicine as RequestHandler);
-medicineRoute.get('/', readMedicine as RequestHandler);
-medicineRoute.get('/:id', readMedicine as RequestHandler);
-medicineRoute.put('/:id', updateMedicine as RequestHandler);
-medicineRoute.delete('/:id', deleteMedicine as RequestHandler);
+medicineRoute.post('/', createMedicine);
+medicineRoute.get('/', getAllMedicine);
+medicineRoute.get('/:id', getMedicineById);
+medicineRoute.put('/:id', updateMedicine);
+medicineRoute.delete('/:id', deleteMedicine);
 
 export default medicineRoute;
