@@ -2,7 +2,18 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../../configs/database';
 import Branch from '../Branch/Branch';
 
-class Medicine extends Model {}
+class Medicine extends Model {
+  public MedicineID!: number;
+  public MedicineName!: string;
+  public MedicineQuantity!: string;
+  public MedicinePrice!: number;
+  public ManufactureDate!: Date;
+  public ExpirationDate!: Date;
+  public BranchID!: number;
+  public MedicineStatus!: boolean;
+  public MedicineDescription!: string;
+  public MedicineIMG!: string;
+}
 
 Medicine.init(
     {
@@ -56,7 +67,7 @@ Medicine.init(
         sequelize,
         modelName: 'Medicine',
         tableName: 'Medicine',
-        timestamps: false // Make sure this line is present
+        timestamps: false
     }
 );
 

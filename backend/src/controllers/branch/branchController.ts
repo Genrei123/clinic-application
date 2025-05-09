@@ -1,17 +1,42 @@
 import { Request, Response } from 'express';
 import Branch from '../../model/Branch/Branch';
+import { logDatabaseAction } from '../../middleware/loggingMiddleware';
 
-export const createBranch = async (req: Request, res: Response) => {
+// Add this type definition in the branchController.ts file
+interface AuthRequest extends Request {
+  user?: { id: number; username: string; };
+}
+
+export const createBranch = async (req: AuthRequest, res: Response) => {
     try {
-        const newBranch = await Branch.create(req.body);
+        const { BranchName, BranchLocation, BranchStatus, BranchRequest } = req.body;
+        
+        const newBranch = await Branch.create({
+            BranchName,
+            BranchLocation,
+            BranchStatus,
+            BranchRequest
+        });
+        
+        // Log the creation
+        await logDatabaseAction(
+            'Branch',
+            'CREATE',
+            newBranch.BranchID,
+            req.user?.id || null,
+            null,
+            newBranch.toJSON(),
+            `Branch '${BranchName}' created`,
+            req
+        );
+        
         res.status(201).json({
             success: true,
-            message: 'Branch created successfully',
             data: newBranch
         });
     } catch (error) {
         console.error('Error creating branch:', error);
-        res.status(500).json({
+        res.status(500).json({ 
             success: false,
             message: 'Failed to create branch',
             error: error
@@ -19,7 +44,7 @@ export const createBranch = async (req: Request, res: Response) => {
     }
 }
 
-export const readBranch = async (req: Request, res: Response) => {
+export const readBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         
@@ -31,12 +56,38 @@ export const readBranch = async (req: Request, res: Response) => {
                     message: 'Branch not found'
                 });
             }
+
+            // Log the read operation for a single branch
+            await logDatabaseAction(
+                'Branch',
+                'READ',
+                parseInt(id),
+                req.user?.id || null,
+                null,
+                branch.toJSON(),
+                `Branch '${branch.BranchName}' viewed`,
+                req
+            );
+
             return res.status(200).json({
                 success: true,
                 data: branch
             });
         } else {
             const branches = await Branch.findAll();
+
+            // Add logging for listing all branches
+            await logDatabaseAction(
+                'Branch',
+                'READ',
+                0, // Use 0 or null to indicate "all records"
+                req.user?.id || null,
+                null,
+                { count: branches.length }, // Log branch count instead of full data to avoid huge logs
+                `All branches retrieved (${branches.length} records)`,
+                req
+            );
+            
             return res.status(200).json({
                 success: true,
                 data: branches
@@ -52,15 +103,38 @@ export const readBranch = async (req: Request, res: Response) => {
     }
 }
 
-export const updateBranch = async (req: Request, res: Response) => {
+export const updateBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
+        
+        // Get the branch before update for logging
+        const oldBranch = await Branch.findByPk(id);
+        if (!oldBranch) {
+            return res.status(404).json({
+                success: false,
+                message: 'Branch not found'
+            });
+        }
+        
         const [updated] = await Branch.update(req.body, {
             where: { BranchID: id }
         });
         
         if (updated) {
             const updatedBranch = await Branch.findByPk(id);
+            
+            // Log the update
+            await logDatabaseAction(
+                'Branch',
+                'UPDATE',
+                parseInt(id),
+                req.user?.id || null,
+                oldBranch.toJSON(),
+                updatedBranch?.toJSON() || null,
+                `Branch '${updatedBranch?.BranchName}' updated`,
+                req
+            );
+            
             return res.status(200).json({
                 success: true,
                 message: 'Branch updated successfully',
@@ -82,14 +156,36 @@ export const updateBranch = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteBranch = async (req: Request, res: Response) => {
+export const deleteBranch = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
+        
+        // Get the branch before delete for logging
+        const branchToDelete = await Branch.findByPk(id);
+        if (!branchToDelete) {
+            return res.status(404).json({
+                success: false,
+                message: 'Branch not found'
+            });
+        }
+        
         const deleted = await Branch.destroy({
             where: { BranchID: id }
         });
         
         if (deleted) {
+            // Log the deletion
+            await logDatabaseAction(
+                'Branch',
+                'DELETE',
+                parseInt(id),
+                req.user?.id || null,
+                branchToDelete.toJSON(),
+                null,
+                `Branch '${branchToDelete.BranchName}' deleted`,
+                req
+            );
+            
             return res.status(200).json({
                 success: true,
                 message: 'Branch deleted successfully'
