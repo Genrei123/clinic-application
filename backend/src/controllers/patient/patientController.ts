@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { instanceToPlain } from "class-transformer";    
+import { SafePatientResponseDTO } from '../../dto/PatientResponseDTO';
 import Patient from '../../model/Patient/Patient';
 
 export const createPatient = async (req: Request, res: Response) => {
@@ -31,15 +33,17 @@ export const readPatient = async (req: Request, res: Response) => {
                     message: 'Patient not found'
                 });
             }
+            const patientResponseDTO = new SafePatientResponseDTO(patient);
             return res.status(200).json({
                 success: true,
-                data: patient
+                data: instanceToPlain(patientResponseDTO)
             });
         } else {
             const patients = await Patient.findAll();
+            const patientResponseDTOs = patients.map(patient => new SafePatientResponseDTO(patient));
             return res.status(200).json({
                 success: true,
-                data: patients
+                data: instanceToPlain(patientResponseDTOs)
             });
         }
     } catch (error) {
