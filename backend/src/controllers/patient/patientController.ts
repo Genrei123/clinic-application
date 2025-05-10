@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { instanceToPlain } from "class-transformer";    
-import { SafePatientResponseDTO } from '../../dto/PatientResponseDTO';
+import { SafePatientResponseDTO } from '../../DTO/PatientDTO';
 import Patient from '../../model/Patient/Patient';
 
 export const createPatient = async (req: Request, res: Response) => {
