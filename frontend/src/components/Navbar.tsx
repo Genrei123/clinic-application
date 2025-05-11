@@ -1,31 +1,25 @@
 import { Button } from "./Button";
+import { Bell, Sun, User } from "lucide-react";
+import { Clock } from "./Clock";
 
 export const Navbar: React.FC = () => {
     return (
-        <nav className="bg-gray-800 p-4 flex justify-between items-center">
-            <Button
-                label="Home"
-                onClick={() => console.log("Home clicked")}
-                className="bg-red-500 hover:bg-red-700 text-black font-bold flex-none"
-            />
-
+        <nav className="bg-[#0A0E15] p-4 flex justify-end items-center">
+        
             <div className="flex items-center space-x-4">
                 <a className="text-white">
-                    Bell Icon
+                    <Bell />
                 </a>
 
                 <a className="text-white">
-                    Theme Icon
+                    <Sun />
                 </a>
 
                 {/* Time */}
-                <div className="text-white">
-                    {new Date().toLocaleTimeString()}
-                </div>
+                <Clock />
 
                 <a className="text-white">
-                    User Icon
-                    Avatar
+                    <User />
                 </a>
 
             </div>
