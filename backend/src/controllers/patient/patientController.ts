@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { instanceToPlain } from "class-transformer";    
+import { instanceToPlain } from "class-transformer";
 import { SafePatientResponseDTO } from '../../DTO/PatientDTO';
 import { Op } from 'sequelize';
 import Patient from '../../model/Patient/Patient';
@@ -27,6 +27,7 @@ export const readPatient = async (req: Request, res: Response) => {
         const { id } = req.params;
         const { fullName } = req.query;
 
+        // Check if id is provided
         if (id) {
             const patient = await Patient.findByPk(id);
             if (!patient) {
@@ -40,8 +41,24 @@ export const readPatient = async (req: Request, res: Response) => {
                 success: true,
                 data: instanceToPlain(patientResponseDTO)
             });
-        } else if (fullName) {
+        }
+        // Check if fullName parameter exists but is empty
+        else if (fullName !== undefined && !String(fullName).trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Search term cannot be empty',
+            });
+        }
+        // Check if fullName has actual content
+        else if (fullName && String(fullName).trim()) {
             const searchTerms = String(fullName).split(/\s+/).filter(Boolean);
+
+            if (searchTerms.length === 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Search term cannot be empty',
+                });
+            }
 
             const nameConditions: { [key: string]: { [key: symbol]: string } }[] = [];
 
