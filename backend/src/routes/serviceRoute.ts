@@ -1,12 +1,18 @@
-import { Router, RequestHandler } from 'express';
-import { createService, readService, updateService, deleteService } from '../controllers/service/serviceController';
+import { Router } from 'express';
+import { 
+    createService, 
+    getAllServices, 
+    getServiceById, 
+    updateService, 
+    deleteService 
+} from '../controllers/service/serviceController';
 
 const serviceRoute = Router();
 
-serviceRoute.post('/', createService as RequestHandler);
-serviceRoute.get('/', readService as RequestHandler);
-serviceRoute.get('/:id', readService as RequestHandler);
-serviceRoute.put('/:id', updateService as RequestHandler);
-serviceRoute.delete('/:id', deleteService as RequestHandler);
+serviceRoute.post('/', createService);
+serviceRoute.get('/', getAllServices);
+serviceRoute.get('/:id', getServiceById);
+serviceRoute.put('/:id', updateService);
+serviceRoute.delete('/:id', deleteService);
 
 export default serviceRoute;
