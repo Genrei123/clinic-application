@@ -3,7 +3,15 @@ import { sequelize } from '../../configs/database';
 import Branch from '../Branch/Branch';
 import Employee from '../Employee/Employee';
 
-class Service extends Model {}
+class Service extends Model {
+  public ServiceID!: number;
+  public ServiceName!: string;
+  public ServiceType!: string;
+  public ServicePrice!: number;
+  public ServiceStatus!: boolean;
+  public BranchID!: number;
+  public EmployeeID!: number;
+}
 
 Service.init(
     {
@@ -14,19 +22,19 @@ Service.init(
         },
         ServiceName: {
             type: DataTypes.STRING(25),
-            allowNull: true,
+            allowNull: true
         },
         ServiceType: {
             type: DataTypes.STRING(25),
-            allowNull: true,
+            allowNull: true
         },
         ServicePrice: {
             type: DataTypes.DOUBLE,
-            allowNull: true,
+            allowNull: true
         },
         ServiceStatus: {
             type: DataTypes.BOOLEAN,
-            allowNull: true,
+            allowNull: true
         },
         BranchID: {
             type: DataTypes.INTEGER,
@@ -48,12 +56,11 @@ Service.init(
     {
         sequelize,
         modelName: 'Service',
-        tableName: 'Service', // Explicitly set the table name to match SQL schema
-        timestamps: false // Add this line to disable timestamps
+        tableName: 'Service',
+        timestamps: false
     }
 );
 
-// Define the associations
 Service.belongsTo(Branch, { foreignKey: 'BranchID' });
 Service.belongsTo(Employee, { foreignKey: 'EmployeeID' });
 
