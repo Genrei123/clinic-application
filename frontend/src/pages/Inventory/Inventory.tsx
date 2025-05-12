@@ -44,7 +44,6 @@ const Inventory: React.FC = () => {
         <>
 
             <div >
-                <h1>Welcome to Inventory!</h1>
                 <div className="flex space-x-4">
                     <Input
                         type="text"
@@ -53,7 +52,7 @@ const Inventory: React.FC = () => {
                     />
 
                     <Button
-                        label="Add Inventory"
+                        label="Add Item"
                         onClick={() => console.log("Add Inventory Clicked")}
                     // className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
                     />

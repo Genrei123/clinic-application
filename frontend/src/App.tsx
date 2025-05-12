@@ -9,6 +9,7 @@ import { DashboardLayout } from "./layout/DashboardLayout";
 import { Management } from "./pages/Management/Management";
 import { Patients } from "./pages/Patients/Patients";
 import { Patient } from "./pages/Patients/Patient";
+
 function App() {
   return (
     <>
