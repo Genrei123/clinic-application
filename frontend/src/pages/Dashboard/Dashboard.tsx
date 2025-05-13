@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
             greetings: `Hello, ${username}`,
             cards: [
                 {
-                    color: "[#CDCDCD]",
+                    color: "primary",
                     title: "Daily Income",
                     content: "test",
                     redirectUrl: "/daily-income"
@@ -114,13 +114,13 @@ const Dashboard: React.FC = () => {
                         <h1 className="text-2xl font-bold text-white">{dashboardData.greetings}</h1>
                         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                             <button
-                                className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
+                                className="bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
                                 onClick={handleAddPatient}
                             >
                                 Add Patient
                             </button>
                             <button
-                                className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
+                                className="bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
                                 onClick={handleAddInventory}
                             >
                                 Add Inventory

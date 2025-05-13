@@ -37,7 +37,7 @@ export const Patients: React.FC = () => {
         <Table
           title="Patients"
           columns={PatientsColumns}
-          data={PatientsData} // Pass the defined data array
+          data={PatientsData} 
         />
       </div>
     </>

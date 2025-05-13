@@ -19,3 +19,4 @@ export interface Patient {
     Image?: string,
     PhilHealthId?: string,
 }
+

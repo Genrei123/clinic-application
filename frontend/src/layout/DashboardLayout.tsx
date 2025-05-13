@@ -49,7 +49,7 @@ export const DashboardLayout: React.FC = () => {
       {isMobile && ( // Only show on mobile
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 z-[60] bg-[#6D2E46] text-white p-2 rounded-md" // Use fixed and high z-index
+          className="fixed top-4 left-4 z-[60] bg-primary text-white p-2 rounded-md" // Use fixed and high z-index
           aria-label="Toggle Sidebar"
         >
           <svg
@@ -103,7 +103,7 @@ export const DashboardLayout: React.FC = () => {
           }`}
         >
           <Navbar />
-          <div className="bg-[#0A0E15] text-white flex-1 p-4 overflow-auto"> {/* Add overflow-auto if needed */}
+          <div className="bg-background text-white flex-1 p-4 overflow-auto"> {/* Add overflow-auto if needed */}
             <Outlet />
           </div>
         </div>

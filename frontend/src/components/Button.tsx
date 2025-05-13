@@ -44,7 +44,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={`
-        bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity
+        bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity
       `}
       onClick={onClick}
       disabled={disabled}

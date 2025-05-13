@@ -81,18 +81,18 @@ export function Sidebar({ isOpen, isMobile, toggleSidebar }: SidebarProps) {
 
     // Sidebar container - controlled by props
     <div
-      className={`fixed top-0 left-0 h-full bg-[#1E1E2A] shadow-md z-50 transition-transform duration-300 ${
+      className={`fixed top-0 left-0 h-full bg-background shadow-md z-50 transition-transform duration-300 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } ${isMobile ? "w-full max-w-xs" : "w-64"}`} // Use max-w-xs for mobile instead of w-full? Or stick to w-full w-full md:w-64 based on design
     >
       {/* Header */}
-      <div className="bg-[#6D2E46] p-4 text-center relative"> {/* Add relative for absolute positioning of the close button */}
+      <div className="bg-primary p-4 text-center relative"> {/* Add relative for absolute positioning of the close button */}
         <h1 className="text-lg font-bold text-white">JIMIRENE</h1>
         {/* Close button - only visible on mobile when sidebar is open */}
         {isMobile && isOpen && ( // Only show on mobile and when open
           <button
             onClick={toggleSidebar} // Use the prop function
-            className="absolute right-4 top-4 bg-[#6D2E46] text-white p-2 rounded-md" // Positioned absolutely within header
+            className="absolute right-4 top-4 bg-primary text-white p-2 rounded-md" // Positioned absolutely within header
             aria-label="Close Sidebar"
           >
             <svg
@@ -127,8 +127,8 @@ export function Sidebar({ isOpen, isMobile, toggleSidebar }: SidebarProps) {
             }}
             className={
               item.isActive
-                ? "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white bg-[#6D2E46]"
-                : "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-[#6D2E46]/20 hover:text-white"
+                ? "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white bg-primary"
+                : "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-primary/20 hover:text-white"
             }
           >
             {item.icon}
@@ -145,7 +145,7 @@ export function Sidebar({ isOpen, isMobile, toggleSidebar }: SidebarProps) {
          {/* The footer div needs to be part of the flex column to be pushed down */}
       </nav>
       {/* The footer div needs to be outside the flex-grow nav but inside the sidebar div */}
-        <div className="bg-[#6D2E46]/80 p-3 text-center text-xs text-white/60 absolute bottom-0 left-0 w-full z-30">
+        <div className="bg-primary/80 p-3 text-center text-xs text-white/60 absolute bottom-0 left-0 w-full z-30">
           Diagnostic portal
         </div>
 

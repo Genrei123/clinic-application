@@ -4,7 +4,7 @@ import { Clock } from "./Clock";
 
 export const Navbar: React.FC = () => {
     return (
-        <nav className="bg-[#0A0E15] p-4 flex justify-end items-center">
+        <nav className="bg-background p-4 flex justify-end items-center">
         
             <div className="flex items-center space-x-4">
                 <a className="text-white">

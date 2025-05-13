@@ -63,6 +63,7 @@ const Inventory: React.FC = () => {
                         title="Inventory"
                         columns={InventoryColumns}
                         data={InventoryData} // Pass the defined data array
+                        selector={true} // Enable row selection
                     />
                 </div>
 
