@@ -1,10 +1,28 @@
 import { useState } from "react"
 import { Button } from "../../components/Button"
+import { useAuth } from "../../hooks/useAuth"
 
 export default function LoginPage() {
   const [activeTab] = useState<"login" | "register">("register")
-  const [email, setEmail] = useState("")
+  const [user, setUser] = useState("")
   const [password, setPassword] = useState("")
+  const { login } = useAuth();
+
+  const handleLogin = async () => {
+    
+    
+    try {
+      const response = await login({ username: user, password });
+      if (response) {
+        // Handle successful login
+        alert(`Login successful ${response}`);
+      }
+    } catch (error) {
+      // Handle login error
+      console.error("Login failed", error);
+      alert("Login failed. Please check your credentials.");
+    }
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
@@ -33,15 +51,15 @@ export default function LoginPage() {
             </h2>
             <form className="space-y-6">
               <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-800">
-                  Email
+                <label htmlFor="username" className="block text-sm font-medium text-gray-800">
+                  Username
                 </label>
                 <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="example@email.com"
+                  type="username"
+                  id="username"
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
+                  placeholder="example@user.com"
                   className="w-full rounded-full border-0 bg-[#white] px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#AEA4BF]"
                 />
               </div>
@@ -79,14 +97,13 @@ export default function LoginPage() {
 
                 <div className="pt-2 flex justify-center">
                   <Button
-                  type="submit"
                   className={`rounded-lg px-6 py-2 text-sm font-semibold shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                   activeTab === "login"
                   ? "bg-[#AEA4BF] text-black hover:bg-[#9d91b0] focus:ring-[#AEA4BF]"
                   : "bg-[#AEA4BF] text-black hover:bg-[#9d91b0] focus:ring-[#AEA4BF]"
                   }`}
                   label={activeTab === "login" ? "Login" : "Create"}
-                  onClick={() => {}}
+                  onClick={handleLogin}
                 />
                 </div>
                 <div className="mt-4 text-center">

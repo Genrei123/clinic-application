@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<Login />} /> */}
-          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth" element={<Login />} />
 
           <Route path = "/" element = {<DashboardLayout />}>
             <Route index element={<Dashboard />} />

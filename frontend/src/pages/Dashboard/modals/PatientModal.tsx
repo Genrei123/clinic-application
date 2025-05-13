@@ -1,5 +1,5 @@
 import { Input } from "../../../components/Input";
-import { Patient } from "../../../types/Patient";
+import { Patient } from "../../../types/types";
 import React, { useState } from "react";
 
 interface PatientModalProps {
