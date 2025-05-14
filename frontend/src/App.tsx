@@ -9,6 +9,7 @@ import { DashboardLayout } from "./layout/DashboardLayout";
 import { Management } from "./pages/Management/Management";
 import { Patients } from "./pages/Patients/Patients";
 import { Patient } from "./pages/Patients/Patient";
+import { RequireAuth } from "./pages/Auth/RequiredAuth";
 
 function App() {
   return (
@@ -17,16 +18,24 @@ function App() {
     <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<Login />} /> */}
-          <Route path="/auth" element={<Login />} />
+          <Route path="/" element={<Login />} />
 
-          <Route path = "/" element = {<DashboardLayout />}>
+          
+        
+          <Route path = "/dashboard" element = {
+            <RequireAuth>
+              <DashboardLayout />
+            </RequireAuth>
+            }>
             <Route index element={<Dashboard />} />
+            
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="patients" element={<Patients />} />
             <Route path="patients/:id" element={<Patient />} />
             <Route path="management" element={<Management />} />
           </Route>
+        
 
         </Routes>
     </BrowserRouter>

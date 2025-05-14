@@ -12,11 +12,11 @@ export interface Register {
 export interface User {
     id: number,
     username: string,
-    password: string,
+    //password: string,
     //email: string,
-    isVerified: boolean,
-    verificationToken: string,
-    verificationExpires: string,
+    // isVerified: boolean,
+    // verificationToken: string,
+    // verificationExpires: string,
 }
 
 export interface Baby {

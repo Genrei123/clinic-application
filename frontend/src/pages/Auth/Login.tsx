@@ -1,26 +1,26 @@
 import { useState } from "react"
 import { Button } from "../../components/Button"
 import { useAuth } from "../../hooks/useAuth"
+import { useNavigate } from "react-router-dom"
 
 export default function LoginPage() {
   const [activeTab] = useState<"login" | "register">("register")
   const [user, setUser] = useState("")
   const [password, setPassword] = useState("")
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    
-    
     try {
       const response = await login({ username: user, password });
       if (response) {
         // Handle successful login
-        alert(`Login successful ${response}`);
+        navigate("/dashboard");
       }
     } catch (error) {
       // Handle login error
-      console.error("Login failed", error);
       alert("Login failed. Please check your credentials.");
+      navigate("/auth");
     }
   }
 

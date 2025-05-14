@@ -6,7 +6,8 @@ export function useAuth() {
     const login = async (User: Login) => {
         const response = await authService.login(User);
         if (response.status === 200) {
-            const data = await response.data();
+            const data = await response.data;
+            console.log('Login successful:', data);
             localStorage.setItem('token', data.token);
             return data;
         } else {
@@ -14,5 +15,10 @@ export function useAuth() {
         }
     }
 
-    return { login };
+    const isLoggedIn = () => {
+        const token = localStorage.getItem('token');
+        return token !== null;
+    }
+    
+    return { login, isLoggedIn };
 }

@@ -3,6 +3,9 @@ import { useState, useEffect } from "react"; // Import useState and useEffect
 import { Sidebar } from "../components/Sidebar";
 import { Navbar } from "../components/Navbar"; // Assuming you have a Navbar component
 import { Outlet } from "react-router-dom";
+import { User } from "../types/types"; // Adjust the import based on your project structure
+
+
 
 export const DashboardLayout: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
