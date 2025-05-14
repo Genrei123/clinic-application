@@ -9,16 +9,25 @@ export function useAuth() {
             const data = await response.data;
             console.log('Login successful:', data);
             localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
             return data;
         } else {
             throw new Error('Login failed');
         }
     }
 
+    const getUser = () => {
+        const user = localStorage.getItem('user');
+        if (user) {
+            return JSON.parse(user);
+        }
+        return null;
+    }
+
     const isLoggedIn = () => {
         const token = localStorage.getItem('token');
         return token !== null;
     }
-    
-    return { login, isLoggedIn };
+
+    return { login, isLoggedIn, getUser };
 }

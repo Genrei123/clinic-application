@@ -18,17 +18,16 @@ function App() {
     <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<Login />} /> */}
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
 
           
         
-          <Route path = "/dashboard" element = {
+          <Route path = "/" element = {
             <RequireAuth>
               <DashboardLayout />
             </RequireAuth>
             }>
             <Route index element={<Dashboard />} />
-            
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="inventory" element={<Inventory />} />
             <Route path="patients" element={<Patients />} />

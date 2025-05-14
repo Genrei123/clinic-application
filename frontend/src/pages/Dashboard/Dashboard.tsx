@@ -4,10 +4,12 @@ import { PatientModal } from './modals/PatientModal';
 // Import the new Table component
 import { Table } from '../../components/Table';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 
 const Dashboard: React.FC = () => {
-    const username = "Nandor the Relentless";
+    const { getUser } = useAuth();
+    const username = getUser().username || "Nandor the Relentless";
 
     const titles = [
         {

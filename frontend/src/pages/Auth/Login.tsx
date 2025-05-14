@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "../../components/Button"
 import { useAuth } from "../../hooks/useAuth"
 import { useNavigate } from "react-router-dom"
@@ -9,6 +9,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // User is already logged in, redirect to dashboard
+      navigate("/dashboard");
+    }
+  })
 
   const handleLogin = async () => {
     try {
