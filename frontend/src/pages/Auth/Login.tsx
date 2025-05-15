@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    if (token === null) {
       // User is already logged in, redirect to dashboard
       navigate("/dashboard");
     }

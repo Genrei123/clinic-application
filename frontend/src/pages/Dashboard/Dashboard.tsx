@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/Card';
 import { PatientModal } from './modals/PatientModal';
-// Import the new Table component
 import { Table } from '../../components/Table';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -9,7 +8,22 @@ import { useAuth } from '../../hooks/useAuth';
 
 const Dashboard: React.FC = () => {
     const { getUser } = useAuth();
-    const username = getUser().username || "Nandor the Relentless";
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        const user = getUser();
+        if (!user) {
+            alert("You need to be logged in to view this page.");
+            navigate("/login");
+        }
+    },[]);
+
+    const username = getUser()?.username;
+    if (!username || username === "" || username === undefined) {
+        alert("You need to be logged in to view this page.");
+        navigate("/login");
+        return null;
+    }
 
     const titles = [
         {

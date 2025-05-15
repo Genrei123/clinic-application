@@ -1,8 +1,32 @@
+import { useEffect, useState } from "react";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
+import axiosInstance from "../../api/axiosConfig";
+import { InventoryModal } from "./modals/InventoryModal";
 
 const Inventory: React.FC = () => {
+    // Fetch inventory data from the server
+    const [showInventoryForm, setShowInventoryForm] = useState(false);
+
+    useEffect(() => {
+        const response = async () => {
+            try {
+                const res = await axiosInstance.get("/inventory/");
+                console.log(res.data);
+            } catch (error) {
+                console.error("Error fetching inventory data:", error);
+            }
+        } 
+
+        response();
+    }, []);
+
+    const handleAddInventory = () => {
+        setShowInventoryForm(true);
+    }
+
+
     const InventoryData = [
         {
             id: 1,
@@ -53,7 +77,7 @@ const Inventory: React.FC = () => {
 
                     <Button
                         label="Add Item"
-                        onClick={() => console.log("Add Inventory Clicked")}
+                        onClick={handleAddInventory}
                     // className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
                     />
                 </div>
@@ -66,6 +90,12 @@ const Inventory: React.FC = () => {
                         selector={true} // Enable row selection
                     />
                 </div>
+
+                <InventoryModal
+                    isOpen={showInventoryForm}
+                    onClose={() => setShowInventoryForm(false)}
+                    medicine={null}
+                />
 
             </div>
         </>
