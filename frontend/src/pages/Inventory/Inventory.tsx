@@ -8,62 +8,38 @@ import { InventoryModal } from "./modals/InventoryModal";
 const Inventory: React.FC = () => {
     // Fetch inventory data from the server
     const [showInventoryForm, setShowInventoryForm] = useState(false);
+    const [medicineData, setMedicineData] = useState([{}]);
 
     useEffect(() => {
         const response = async () => {
             try {
-                const res = await axiosInstance.get("/inventory/");
-                console.log(res.data);
+                const res = await axiosInstance.get("/medicine/");
+                if (res.status === 200) {
+                    setMedicineData(res.data.data);
+                } else {
+                    console.error("Failed to fetch inventory data");
+                }
             } catch (error) {
                 console.error("Error fetching inventory data:", error);
             }
         } 
 
         response();
-    }, []);
+    }, [medicineData]);
+
+    const medicineColumns = [
+        { key: 'id', header: 'ID', render: (item: any) => item.MedicineID },
+        { key: 'name', header: 'Name', render: (item: any) => item.MedicineName },
+        { key: 'quantity', header: 'Quantity', render: (item: any) => item.MedicineQuantity },
+        { key: 'unit', header: 'Price', render: (item: any) => item.MedicinePrice },
+        { key: 'price', header: 'Manufacture Date', render: (item: any) => item.ManufactureDate },
+        { key: 'expirationDate', header: 'Expiration Date', render: (item: any) => item.ExpirationDate },
+    ];
 
     const handleAddInventory = () => {
         setShowInventoryForm(true);
     }
-
-
-    const InventoryData = [
-        {
-            id: 1,
-            name: "Paracetamol",
-            quantity: 100,
-            unit: "mg",
-            price: 0.5,
-            expirationDate: "2024-12-31",
-        },
-        {
-            id: 2,
-            name: "Ibuprofen",
-            quantity: 200,
-            unit: "mg",
-            price: 0.75,
-            expirationDate: "2025-06-30",
-        },
-        {
-            id: 3,
-            name: "Amoxicillin",
-            quantity: 50,
-            unit: "mg",
-            price: 1.0,
-            expirationDate: "2024-09-15",
-        },
-
-    ];
-
-    const InventoryColumns = [
-        { key: 'id', header: 'ID', render: (item: typeof InventoryData[0]) => item.id },
-        { key: 'name', header: 'Name', render: (item: typeof InventoryData[0]) => item.name },
-        { key: 'quantity', header: 'Quantity', render: (item: typeof InventoryData[0]) => item.quantity },
-        { key: 'unit', header: 'Unit', render: (item: typeof InventoryData[0]) => item.unit },
-        { key: 'price', header: 'Price', render: (item: typeof InventoryData[0]) => item.price },
-        { key: 'expirationDate', header: 'Expiration Date', render: (item: typeof InventoryData[0]) => item.expirationDate },
-
-    ];
+    
     return (
         <>
 
@@ -84,9 +60,9 @@ const Inventory: React.FC = () => {
 
                 <div className="mt-4">
                     <Table
-                        title="Inventory"
-                        columns={InventoryColumns}
-                        data={InventoryData} // Pass the defined data array
+                        title="Medicines"
+                        columns={medicineColumns}
+                        data={medicineData} // Pass the defined data array
                         selector={true} // Enable row selection
                     />
                 </div>

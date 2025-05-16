@@ -47,6 +47,19 @@ export interface Checkup {
     
 }
 
+export interface Medicine {
+    MedicineID: number,
+    MedicineName: string,
+    MedicineQuantity: number,
+    ManufactureDate: string,
+    ExpirationDate: string,
+    BranchID: number,
+    MedicineStatus: boolean,
+    MedicineDescription: string,
+    MedicineIMG: string
+}
+
+
 
 
 
