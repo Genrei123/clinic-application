@@ -4,11 +4,13 @@ import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
 import axiosInstance from "../../api/axiosConfig";
 import { InventoryModal } from "./modals/InventoryModal";
+import { Medicine } from "../../types/types";
 
 const Inventory: React.FC = () => {
     // Fetch inventory data from the server
     const [showInventoryForm, setShowInventoryForm] = useState(false);
     const [medicineData, setMedicineData] = useState([{}]);
+    const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
 
     useEffect(() => {
         const response = async () => {
@@ -25,7 +27,7 @@ const Inventory: React.FC = () => {
         } 
 
         response();
-    }, [medicineData]);
+    }, []);
 
     const medicineColumns = [
         { key: 'id', header: 'ID', render: (item: any) => item.MedicineID },
@@ -36,10 +38,80 @@ const Inventory: React.FC = () => {
         { key: 'expirationDate', header: 'Expiration Date', render: (item: any) => item.ExpirationDate },
     ];
 
+    const handleFetchMedicineData = async () => {
+        try {
+            const res = await axiosInstance.get("/medicine/");
+            if (res.status === 200) {
+                setMedicineData(res.data.data);
+            } else {
+                console.error("Failed to fetch inventory data");
+            }
+        } catch (error) {
+            console.error("Error fetching inventory data:", error);
+        }
+    }
+
     const handleAddInventory = () => {
         setShowInventoryForm(true);
+        handleFetchMedicineData();
     }
-    
+
+    const handleDelete = (item: any) => {
+        // Handle delete action here
+        console.log('Delete item:', item);
+        // Check if it's medicine or patient
+        if (item.MedicineID) {
+            // Handle delete for medicine
+            console.log('Deleting medicine with ID:', item.MedicineID);
+            const response = async () => {
+                try {
+                    await axiosInstance.delete(`/medicine/${item.MedicineID}/`);
+                    alert('Medicine deleted successfully');
+                    handleFetchMedicineData(); // Fetch updated data
+                } catch (error) {
+                    console.error('Error deleting medicine:', error);
+                }
+            }
+            response();
+        } 
+    }
+
+    const handleSubmit = async (formData: any) => {
+        try {
+            const res = await axiosInstance.post("/medicine/", formData);
+            if (res.status === 201) {
+                alert('Medicine added successfully');
+                handleFetchMedicineData(); // Fetch updated data
+                setShowInventoryForm(false); // Close the modal
+            } else {
+                console.error("Failed to add medicine");
+            }
+        } catch (error) {
+            console.error("Error adding medicine:", error);
+        }
+    }
+
+    const handleEdit = (item: any) => {
+        setShowInventoryForm(true);
+        setSelectedMedicine(item);
+        console.log('Edit item:', item);
+    }
+
+    const handleUpdate = async (formData: any) => {
+        try {
+            const res = await axiosInstance.put(`/medicine/${selectedMedicine?.MedicineID}/`, formData);
+            if (res.status === 200) {
+                alert('Medicine updated successfully');
+                handleFetchMedicineData(); // Fetch updated data
+                setShowInventoryForm(false); // Close the modal
+            } else {
+                console.error("Failed to update medicine");
+            }
+        } catch (error) {
+            console.error("Error updating medicine:", error);
+        }
+    }
+
     return (
         <>
 
@@ -62,15 +134,19 @@ const Inventory: React.FC = () => {
                     <Table
                         title="Medicines"
                         columns={medicineColumns}
-                        data={medicineData} // Pass the defined data array
-                        selector={true} // Enable row selection
+                        data={medicineData}
+                        selector={true}
+                        onDelete={handleDelete} 
+                        openModal={handleEdit}
                     />
                 </div>
 
                 <InventoryModal
                     isOpen={showInventoryForm}
                     onClose={() => setShowInventoryForm(false)}
-                    medicine={null}
+                    medicine={selectedMedicine}
+                    handleSubmit={handleSubmit}
+                    handleEdit={handleUpdate}
                 />
 
             </div>

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import axiosInstance from "../../../api/axiosConfig";
+import { useState, useEffect } from "react";
 
 interface Medicine {
     MedicineName: string;
@@ -16,44 +15,75 @@ interface Medicine {
 interface InventoryModalProps {
     isOpen: boolean;
     onClose: () => void;
+    handleSubmit: (data: Medicine) => void;
+    handleEdit?: (data: Medicine) => void;
     medicine: Medicine | null;
 }
 
 export const InventoryModal: React.FC<InventoryModalProps> = ({
     isOpen,
     onClose,
+    handleSubmit,
+    handleEdit,
+    medicine,
 }) => {
+    const isEditMode = !!medicine && !!handleEdit;
 
-    if (!isOpen) return null;
+    const [formData, setFormData] = useState<Medicine>({
+        MedicineName: "",
+        MedicineQuantity: 0,
+        MedicinePrice: 0,
+        ManufactureDate: "",
+        ExpirationDate: "",
+        BranchID: 0,
+        MedicineStatus: true,
+        MedicineDescription: "",
+        MedicineIMG: "",
+    });
 
-    const [formData, setFormData] = useState<Medicine>({} as Medicine);
+    // Populate form with medicine data when in edit mode
+    useEffect(() => {
+        if (isEditMode && medicine) {
+            setFormData(medicine);
+        } else {
+            setFormData({
+                MedicineName: "",
+                MedicineQuantity: 0,
+                MedicinePrice: 0,
+                ManufactureDate: "",
+                ExpirationDate: "",
+                BranchID: 0,
+                MedicineStatus: true,
+                MedicineDescription: "",
+                MedicineIMG: "",
+            });
+        }
+    }, [medicine, isOpen]);
 
     const handleClose = () => {
         onClose();
-    }
+    };
 
-    const handleSubmit = async () => {
-        
-        await axiosInstance.post("/medicine/", formData)
-            .then((response) => {
-                console.log("Medicine added successfully:", response.data);
-                // Optionally, you can close the modal or reset the form here
-                onClose();
-            })
-            .catch((error) => {
-                console.error("Error adding Medicine:", error);
-                // Optionally, you can show an error message to the user here
-            });
+    const handleFormSubmit = () => {
+        if (isEditMode && handleEdit) {
+            handleEdit(formData);
+        } else {
+            handleSubmit(formData);
         }
-    
+        onClose();
+    };
+
+    if (!isOpen) return null;
 
     return (
         <>
             <div>
                 <div className="text-black fixed inset-0 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                        <form onSubmit={handleSubmit}>
-                            <h2 className="text-xl font-bold mb-4">Medicine Details</h2>
+                        <form onSubmit={(e) => e.preventDefault()}>
+                            <h2 className="text-xl font-bold mb-4">
+                                {isEditMode ? "Edit Medicine" : "Add Medicine"}
+                            </h2>
                             <div className="mb-4">
                                 <label className="block text-gray-700">Medicine Name</label>
                                 <input
@@ -101,7 +131,6 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                     className="border rounded w-full py-2 px-3"
                                 />
                             </div>
-
                             <div className="mb-4">
                                 <label className="block text-gray-700">Expiration Date</label>
                                 <input
@@ -113,7 +142,6 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                     className="border rounded w-full py-2 px-3"
                                 />
                             </div>
-
                             <div className="mb-4">
                                 <label className="block text-gray-700">Branch ID</label>
                                 <input
@@ -126,7 +154,6 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                     className="border rounded w-full py-2 px-3"
                                 />
                             </div>
-
                             <div className="mb-4">
                                 <label className="block text-gray-700">Medicine Status</label>
                                 <select
@@ -140,7 +167,6 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                     <option value="false">Not Available</option>
                                 </select>
                             </div>
-
                             <div className="mb-4">
                                 <label className="block text-gray-700">Medicine Description</label>
                                 <textarea
@@ -152,7 +178,6 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                     className="border rounded w-full py-2 px-3"
                                 />
                             </div>
-
                             <div className="mb-4">
                                 <label className="block text-gray-700">Medicine Image URL</label>
                                 <input
@@ -165,7 +190,6 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                     className="border rounded w-full py-2 px-3"
                                 />
                             </div>
-
                             <div className="flex justify-between">
                                 <button
                                     type="button"
@@ -176,33 +200,16 @@ export const InventoryModal: React.FC<InventoryModalProps> = ({
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={handleSubmit}
+                                    onClick={handleFormSubmit}
                                     className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                                 >
-                                    Submit
+                                    {isEditMode ? "Update" : "Submit"}
                                 </button>
                             </div>
-
-
-                            {/* <div className="mb-4">
-                                <label className="block text-gray-700">
-                                    Medicine Name
-                                </label>
-                                <input
-                                    type="text"
-                                    name="MedicineName"
-                                    value={formData.MedicineName}
-                                    onChange={(e) => setFormData({ ...formData, MedicineName: e.target.value })}
-                                    className="w-full border rounded px-3 py-2"
-                                    placeholder="Enter Medicine Name"
-                                />
-                            </div> */}
                         </form>
                     </div>
                 </div>
-                
             </div>
         </>
-
     );
 }

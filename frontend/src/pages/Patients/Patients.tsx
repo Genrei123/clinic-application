@@ -1,22 +1,55 @@
+import { useEffect, useState } from "react";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
+import axiosInstance from "../../api/axiosConfig";
 
 export const Patients: React.FC = () => {
-  const PatientsData = [
-    { date: '2023-10-01', income: 1000, patients: 10 },
-    { date: '2023-10-02', income: 1200, patients: 12 },
-    { date: '2023-10-03', income: 800, patients: 8 },
-    { date: '2023-10-04', income: 1500, patients: 15 },
-    { date: '2023-10-05', income: 900, patients: 9 },
-  ];
+  const [patientsData, setPatientsData] = useState([{}]);
+
+  const handleFetchPatientsData = async () => {
+    try {
+      const res = await axiosInstance.get("/patient/");
+      if (res.status === 200) {
+        setPatientsData(res.data.data);
+      } else {
+        console.error("Failed to fetch patients data");
+      }
+    } catch (error) {
+      console.error("Error fetching patients data:", error);
+    }
+  }
+
+  useEffect(() => {
+    handleFetchPatientsData();
+  }, []);
+
+  const handleDelete = (item: any) => {
+    if (item.ClientNumber) {
+      const response = async () => {
+        try {
+          await axiosInstance.delete(`/patient/${item.ClientNumber}/`);
+          alert('Patient deleted successfully');
+          // Update state
+          setPatientsData((prevData) => prevData.filter((patient: any) => patient.ClientNumber !== item.ClientNumber));
+
+        } catch (error) {
+          console.error('Error deleting patient:', error);
+        }
+      }
+
+      response();
+    }
+    handleFetchPatientsData();
+  }
 
   const PatientsColumns = [
-    { key: 'date', header: 'Date', render: (item: typeof PatientsData[0]) => item.date },
-    { key: 'income', header: 'Income', render: (item: typeof PatientsData[0]) => item.income }, // Corrected to render income
-    { key: 'patients', header: 'Patients', render: (item: typeof PatientsData[0]) => item.patients }, // Corrected to render patients
-    { key: 'view', header: 'View', render: () => null, navigation: (item: typeof PatientsData[0]) => `/patients/${item.date}` }, // Assuming item has a 'date' as ID
-  ];
+    { key: 'ClientNumber', header: 'Client Number', render: (item: any) => item.ClientNumber },
+    { key: 'fullName', header: 'Full Name', render: (item: any) => `${item.fullName}`},
+    { key: 'PAddress', header: 'Address', render: (item: any) => item.PAddress },
+    { key: 'Admitted', header: 'Admitted', render: (item: any) => item.Admitted },
+    { key: 'action', header: 'Action', render: () => null, navigation: (item: any) => `/patients/${item.ClientNumber}`},
+  ]
 
   return (
     <>
@@ -29,7 +62,6 @@ export const Patients: React.FC = () => {
           <Button
             label="Add Patient"
             onClick={() => console.log("Add Patient Clicked")}
-            // className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
           />
       </div>
 
@@ -37,7 +69,9 @@ export const Patients: React.FC = () => {
         <Table
           title="Patients"
           columns={PatientsColumns}
-          data={PatientsData} 
+          data={patientsData}
+          selector={true}
+          onDelete={handleDelete}
         />
       </div>
     </>

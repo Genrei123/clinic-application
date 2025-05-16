@@ -51,12 +51,17 @@ export interface Medicine {
     MedicineID: number,
     MedicineName: string,
     MedicineQuantity: number,
+    MedicinePrice: number,
     ManufactureDate: string,
     ExpirationDate: string,
     BranchID: number,
     MedicineStatus: boolean,
     MedicineDescription: string,
     MedicineIMG: string
+}
+
+export interface Patient {
+
 }
 
 
