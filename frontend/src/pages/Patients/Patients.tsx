@@ -4,9 +4,11 @@ import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
 import axiosInstance from "../../api/axiosConfig";
 import { toast } from "react-toastify";
+import { Search } from "lucide-react";
 
 export const Patients: React.FC = () => {
   const [patientsData, setPatientsData] = useState([{}]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleFetchPatientsData = async () => {
     try {
@@ -46,33 +48,44 @@ export const Patients: React.FC = () => {
     handleFetchPatientsData();
   }
 
+  const filteredPatientsData = patientsData.filter((item: any) => {
+    if (!searchTerm.trim) return true;
+
+    // Case-insensitive search across multiple fields
+        const searchLower = searchTerm.toLowerCase();
+        return (
+            (item.fullName && item.fullName.toLowerCase().includes(searchLower))
+        );
+  });
+
   const PatientsColumns = [
     { key: 'ClientNumber', header: 'Client Number', render: (item: any) => item.ClientNumber },
-    { key: 'fullName', header: 'Full Name', render: (item: any) => `${item.fullName}`},
+    { key: 'fullName', header: 'Full Name', render: (item: any) => `${item.fullName}` },
     { key: 'PAddress', header: 'Address', render: (item: any) => item.PAddress },
     { key: 'Admitted', header: 'Admitted', render: (item: any) => item.Admitted },
-    { key: 'action', header: 'Action', render: () => null, navigation: (item: any) => `/patients/${item.ClientNumber}`},
+    { key: 'action', header: 'Action', render: () => null, navigation: (item: any) => `/patients/${item.ClientNumber}` },
   ]
 
   return (
     <>
       <div className="flex space-x-4">
-          <Input
-            type="text"
-            placeholder="Search for patients..."
-            onChange={(e) => console.log(e.target.value)}
-          />
-          <Button
-            label="Add Patient"
-            onClick={() => console.log("Add Patient Clicked")}
-          />
+        <Input
+          type="text"
+          placeholder="Search for patients..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <Button
+          label="Add Patient"
+          onClick={() => console.log("Add Patient Clicked")}
+        />
       </div>
 
       <div className="mt-4">
         <Table
           title="Patients"
           columns={PatientsColumns}
-          data={patientsData}
+          data={filteredPatientsData}
           selector={true}
           onDelete={handleDelete}
         />
