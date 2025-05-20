@@ -38,9 +38,9 @@ function App() {
         
 
           <Route path = "/" element = {
-            //<RequireAuth>
+            <RequireAuth>
               <DashboardLayout />
-            //</RequireAuth>
+            </RequireAuth>
             }>
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />

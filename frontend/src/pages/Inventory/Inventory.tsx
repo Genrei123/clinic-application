@@ -12,7 +12,6 @@ const Inventory: React.FC = () => {
     const [showInventoryForm, setShowInventoryForm] = useState(false);
     const [medicineData, setMedicineData] = useState([{}]);
     const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
-    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const response = async () => {
@@ -120,18 +119,6 @@ const Inventory: React.FC = () => {
         }
     }
 
-    const filteredMedicineData = medicineData.filter((medicine: any) => {
-        if (!searchTerm.trim()) return true;
-        
-        // Case-insensitive search across multiple fields
-        const searchLower = searchTerm.toLowerCase();
-        return (
-            (medicine.MedicineName && medicine.MedicineName.toLowerCase().includes(searchLower)) ||
-            (medicine.MedicineID && medicine.MedicineID.toString().includes(searchLower)) ||
-            (medicine.ExpirationDate && medicine.ExpirationDate.toLowerCase().includes(searchLower))
-        );
-    });
-
     return (
         <>
 
@@ -140,8 +127,7 @@ const Inventory: React.FC = () => {
                     <Input
                         type="text"
                         placeholder="Search for inventory..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => console.log(e.target.value)}
                     />
 
                     <Button
@@ -155,7 +141,7 @@ const Inventory: React.FC = () => {
                     <Table
                         title="Medicines"
                         columns={medicineColumns}
-                        data={filteredMedicineData}
+                        data={medicineData}
                         selector={true}
                         onDelete={handleDelete} 
                         openModal={handleEdit}
