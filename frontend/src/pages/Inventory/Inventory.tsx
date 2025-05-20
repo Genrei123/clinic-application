@@ -5,6 +5,7 @@ import { Table } from "../../components/Table";
 import axiosInstance from "../../api/axiosConfig";
 import { InventoryModal } from "./modals/InventoryModal";
 import { Medicine } from "../../types/types";
+import { toast } from "react-toastify";
 
 const Inventory: React.FC = () => {
     // Fetch inventory data from the server
@@ -58,17 +59,19 @@ const Inventory: React.FC = () => {
 
     const handleDelete = (item: any) => {
         // Handle delete action here
-        console.log('Delete item:', item);
+        toast.info('Deleting item...');
         // Check if it's medicine or patient
         if (item.MedicineID) {
             // Handle delete for medicine
             console.log('Deleting medicine with ID:', item.MedicineID);
             const response = async () => {
                 try {
+
                     await axiosInstance.delete(`/medicine/${item.MedicineID}/`);
-                    alert('Medicine deleted successfully');
+                    toast.success('Medicine deleted successfully');
                     handleFetchMedicineData(); // Fetch updated data
                 } catch (error) {
+                    toast.error('Error deleting medicine');
                     console.error('Error deleting medicine:', error);
                 }
             }
@@ -78,15 +81,17 @@ const Inventory: React.FC = () => {
 
     const handleSubmit = async (formData: any) => {
         try {
+            toast.info('Adding medicine...');
             const res = await axiosInstance.post("/medicine/", formData);
             if (res.status === 201) {
-                alert('Medicine added successfully');
+                toast.success('Medicine added successfully');
                 handleFetchMedicineData(); // Fetch updated data
                 setShowInventoryForm(false); // Close the modal
             } else {
                 console.error("Failed to add medicine");
             }
         } catch (error) {
+            toast.error('Error adding medicine');
             console.error("Error adding medicine:", error);
         }
     }
@@ -99,9 +104,11 @@ const Inventory: React.FC = () => {
 
     const handleUpdate = async (formData: any) => {
         try {
+            // Update the selected medicine
+            toast.info('Updating medicine...');
             const res = await axiosInstance.put(`/medicine/${selectedMedicine?.MedicineID}/`, formData);
             if (res.status === 200) {
-                alert('Medicine updated successfully');
+                toast.success('Medicine updated successfully');
                 handleFetchMedicineData(); // Fetch updated data
                 setShowInventoryForm(false); // Close the modal
             } else {

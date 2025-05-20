@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Button } from "../../components/Button"
 import { useAuth } from "../../hooks/useAuth"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 
 export default function LoginPage() {
   const [activeTab] = useState<"login" | "register">("register")
@@ -14,20 +15,22 @@ export default function LoginPage() {
     const token = localStorage.getItem("token");
     if (token === null) {
       // User is already logged in, redirect to dashboard
-      navigate("/dashboard");
+      navigate("/login");
     }
   })
 
   const handleLogin = async () => {
     try {
+      toast.info("Logging in...");
       const response = await login({ username: user, password });
       if (response) {
         // Handle successful login
+        toast.success("Login successful");
         navigate("/dashboard");
       }
     } catch (error) {
       // Handle login error
-      alert("Login failed. Please check your credentials.");
+      toast.error("Invalid username or password");
       navigate("/auth");
     }
   }

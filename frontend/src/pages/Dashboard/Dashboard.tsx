@@ -4,26 +4,29 @@ import { PatientModal } from './modals/PatientModal';
 import { Table } from '../../components/Table';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 
 const Dashboard: React.FC = () => {
     const { getUser } = useAuth();
 
     const navigate = useNavigate();
+    const username = getUser()?.username;
     useEffect(() => {
         const user = getUser();
         if (!user) {
-            alert("You need to be logged in to view this page.");
+            toast.error("You need to be logged in to view this page.");
             navigate("/login");
         }
-    },[]);
 
-    const username = getUser()?.username;
-    if (!username || username === "" || username === undefined) {
-        alert("You need to be logged in to view this page.");
-        navigate("/login");
-        return null;
-    }
+        if (!username || username === "" || username === undefined) {
+            toast.error("You need to be logged in to view this page.");
+            navigate("/login");
+        }
+    }, []);
+
+
+
 
     const titles = [
         {

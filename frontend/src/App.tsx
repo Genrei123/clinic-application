@@ -10,18 +10,33 @@ import { Management } from "./pages/Management/Management";
 import { Patients } from "./pages/Patients/Patients";
 import { Patient } from "./pages/Patients/Patient";
 import { RequireAuth } from "./pages/Auth/RequiredAuth";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
 
     <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        />
         <Routes>
           {/* <Route path="/" element={<Login />} /> */}
+          
           <Route path="/login" element={<Login />} />
 
           
         
+
           <Route path = "/" element = {
             <RequireAuth>
               <DashboardLayout />

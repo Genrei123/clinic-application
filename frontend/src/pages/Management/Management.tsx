@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { Button } from "../../components/Button";
 
 export const Management: React.FC = () => {
@@ -12,13 +13,13 @@ export const Management: React.FC = () => {
                             <div className="justify-between flex items-center space-x-4">
                                 <Button
                                     label="Add Branch"
-                                    onClick={() => alert("Add Branch Clicked")}
+                                    onClick={() => toast.success("Add Branch Clicked")}
                                     className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
                                 />
 
                                 <Button
                                     label="Add Services"
-                                    onClick={() => alert("Add Service Clicked")}
+                                    onClick={() => toast.success("Add Services Clicked")}
                                     className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
                                 />
                             </div>
@@ -33,7 +34,7 @@ export const Management: React.FC = () => {
                 <div className="row-start-2">
                     <h1>Services</h1>
                 </div>
-            </div>
+            </div>   
         </>
     );
 }
