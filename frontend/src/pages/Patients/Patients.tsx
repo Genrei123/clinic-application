@@ -3,6 +3,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
 import axiosInstance from "../../api/axiosConfig";
+import { toast } from "react-toastify";
 
 export const Patients: React.FC = () => {
   const [patientsData, setPatientsData] = useState([{}]);
@@ -27,13 +28,15 @@ export const Patients: React.FC = () => {
   const handleDelete = (item: any) => {
     if (item.ClientNumber) {
       const response = async () => {
+        toast.info("Deleting patient...");
         try {
           await axiosInstance.delete(`/patient/${item.ClientNumber}/`);
-          alert('Patient deleted successfully');
+          toast.success("Patient deleted successfully!");
           // Update state
           setPatientsData((prevData) => prevData.filter((patient: any) => patient.ClientNumber !== item.ClientNumber));
 
         } catch (error) {
+          toast.error("Error deleting patient");
           console.error('Error deleting patient:', error);
         }
       }
