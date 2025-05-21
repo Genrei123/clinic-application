@@ -1,4 +1,3 @@
-import { Button } from "./Button";
 import { Bell, Sun, User } from "lucide-react";
 import { Clock } from "./Clock";
 

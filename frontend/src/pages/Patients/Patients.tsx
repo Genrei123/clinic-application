@@ -4,7 +4,6 @@ import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
 import axiosInstance from "../../api/axiosConfig";
 import { toast } from "react-toastify";
-import { Search } from "lucide-react";
 
 export const Patients: React.FC = () => {
   const [patientsData, setPatientsData] = useState([{}]);

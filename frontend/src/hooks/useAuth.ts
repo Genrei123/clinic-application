@@ -1,10 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import { authService  } from '../api/authService';
 import { Login } from '../types/types';
 
 export function useAuth() {
-
-    const navigate = useNavigate();
 
     const login = async (User: Login) => {
         const response = await authService.login(User);

@@ -60,10 +60,10 @@ const Dashboard: React.FC = () => {
         }
     ];
 
-    const [dailyIncome, setDailyIncome] = useState(0);
-    const [dailyPatients, setDailyPatients] = useState(0);
-    const [latestDate, setLatestDate] = useState(new Date().toLocaleDateString());
-    const [stockStatus, setStockStatus] = useState("Low Stock");
+    const [dailyIncome] = useState(0);
+    const [dailyPatients] = useState(0);
+    const [latestDate] = useState(new Date().toLocaleDateString());
+    const [stockStatus] = useState("Low Stock");
 
     const [showPatientForm, setShowPatientForm] = useState(false);
     const [showInventoryForm, setShowInventoryForm] = useState(false);
@@ -74,6 +74,7 @@ const Dashboard: React.FC = () => {
 
     const handleAddInventory = () => {
         setShowInventoryForm(true);
+        showInventoryForm;
     };
 
     const dashboardData = titles[0];
@@ -105,7 +106,7 @@ const Dashboard: React.FC = () => {
             key: 'action',
             header: 'Action',
             render: () => null, // No default rendering
-            navigation: (item: typeof recentPatientsData[0]) => `/patients/1`, // Assuming item has an 'id'
+            navigation: (item: typeof recentPatientsData[0]) => `/patients/${item.patients}`, // Assuming item has an 'id'
         },
     ];
 

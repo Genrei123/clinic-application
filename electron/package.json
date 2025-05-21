@@ -1,23 +1,30 @@
 {
   "name": "jimirene-electron-app",
+  "productName": "JIMIRENE Clinic Application",
+  "author": "dev-team",
   "version": "1.0.0",
   "description": "Clinic Management application with auto-update capabilities",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder --dir"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Genrei123/clinic-application.git"
   },
-  "author": "dev-team",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Genrei123/clinic-application/issues"
   },
   "homepage": "https://github.com/Genrei123/clinic-application#readme",
   "devDependencies": {
-    "electron": "^36.1.0"
+    "electron": "^36.1.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.dev-team.jimirene-clinic",
+    "files": "!build-assets{*/}"
   }
 }

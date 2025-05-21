@@ -1,6 +1,5 @@
 import type React from "react";
 import { useState } from "react";
-// Remove useState, useEffect - state is lifted up
 import { useNavigate } from "react-router-dom";
 
 type NavItem = {
