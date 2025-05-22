@@ -44,7 +44,7 @@ export default function LoginPage() {
           <div className="w-45 md:w-4/5">
             <img src="/logo_clinic.png" alt="Jimirene Diagnostic & Maternity Clinic" className="h-auto w-full" />
             <h1 className="mt-4 hidden text-center text-xl font-bold text-gray-800 md:block">
-              Jimirene Diagnostic & Maternity Clinic
+              JIMIRENE Diagnostic & Maternity Clinic 
             </h1>
           </div>
         </div>
