@@ -1,8 +1,11 @@
 {
   "name": "frontend",
+  "productName": "Jimirene Maternity Clinic",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "Clinic Management System for Jimirene maternity clinic",
+  "author": "Dev Team",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -47,11 +50,30 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
-    "vitest": "^3.1.2"
+    "vitest": "^3.1.2",
+    "electron-builder": "^26.0.12",
+    "electron": "^36.2.1"
   },
   "eslintConfig": {
     "extends": [
       "plugin:storybook/recommended"
     ]
+  },
+  "main": "electron/main.cjs",
+  "build": {
+    "appId": "com.dev-team.jimirene-clinic",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "electron/main.cjs",
+      "package.json"
+    ],
+    "nsis": {
+      "uninstallDisplayName": "Uninstall this application"
+    },
+    "directories": {
+      "output": "releases",
+      "buildResources": "dist"
+    }
   }
 }

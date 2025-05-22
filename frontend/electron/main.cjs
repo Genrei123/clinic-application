@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require('electron')
-
-const FRONTEND_URL = "../frontend/dist/index.html"
+const path = require('path')
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -8,7 +7,7 @@ const createWindow = () => {
         height: 1080
     })
 
-    win.loadFile(FRONTEND_URL);
+    win.loadFile(path.join(app.getAppPath(), `dist/index.html`));
 }
 
 app.whenReady().then(() => {
