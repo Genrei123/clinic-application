@@ -36,7 +36,10 @@ The system is designed to streamline clinic operations, managem patient data eff
 - Cristobal, Genrey O.
 - Bolivar, Jhon Emerwin M.
 - Sandoval, Shunne Gabriel M.
-- Burce, Lyndon Drey C.
+- Fungo, Gian Higino O.
+- Llanes, Kevin A.
+- Capalac, Garven Ren V.
+- Alerta, Aryz Asez R.
 
 # How to run this project
 This project is in mono-repository style. The backend and the frontend are in the same repository to ensure that the project is centralized and both frontend and backend teams can access the source code of both stack seamlessly.
