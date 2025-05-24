@@ -4,12 +4,15 @@ import { Input } from "../../components/Input";
 import { Table } from "../../components/Table";
 import axiosInstance from "../../api/axiosConfig";
 import { toast } from "react-toastify";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const Patients: React.FC = () => {
   const [patientsData, setPatientsData] = useState([{}]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleFetchPatientsData = async () => {
+    setIsLoading(true);
     try {
       const res = await axiosInstance.get("/patient/");
       if (res.status === 200) {
@@ -19,6 +22,8 @@ export const Patients: React.FC = () => {
       }
     } catch (error) {
       console.error("Error fetching patients data:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -67,28 +72,36 @@ export const Patients: React.FC = () => {
 
   return (
     <>
-      <div className="flex space-x-4">
-        <Input
-          type="text"
-          placeholder="Search for patients..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <Button
-          label="Add Patient"
-          onClick={() => console.log("Add Patient Clicked")}
-        />
-      </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <LoadingSpinner size="lg" />
+        </div>
+      ) : (
+        <>
+          <div className="flex space-x-4">
+            <Input
+              type="text"
+              placeholder="Search for patients..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Button
+              label="Add Patient"
+              onClick={() => console.log("Add Patient Clicked")}
+            />
+          </div>
 
-      <div className="mt-4">
-        <Table
-          title="Patients"
-          columns={PatientsColumns}
-          data={filteredPatientsData}
-          selector={true}
-          onDelete={handleDelete}
-        />
-      </div>
+          <div className="mt-4">
+            <Table
+              title="Patients"
+              columns={PatientsColumns}
+              data={filteredPatientsData}
+              selector={true}
+              onDelete={handleDelete}
+            />
+          </div>
+        </>
+      )}
     </>
   );
 }

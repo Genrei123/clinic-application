@@ -3,11 +3,13 @@ import { Button } from "../../components/Button"
 import { useAuth } from "../../hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import { LoadingScreen } from "../../components/LoadingScreen"
 
 export default function LoginPage() {
   const [activeTab] = useState<"login" | "register">("register")
   const [user, setUser] = useState("")
   const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -26,7 +28,9 @@ export default function LoginPage() {
       if (response) {
         // Handle successful login
         toast.success("Login successful");
-        navigate("/dashboard");
+        // Show loading screen before navigating
+        setIsLoading(true);
+        // Navigation will happen after loading completes
       }
     } catch (error) {
       // Handle login error
@@ -35,8 +39,20 @@ export default function LoginPage() {
     }
   }
 
+  const handleLoadingComplete = () => {
+    // Navigate to dashboard after loading completes
+    navigate("/dashboard");
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      {/* Loading Screen */}
+      <LoadingScreen 
+        isVisible={isLoading}
+        duration={4000}
+        onComplete={handleLoadingComplete}
+      />
+
       {/* Main content container - column on mobile, row on desktop */}
       <div className="flex w-full max-w-xs flex-col items-center rounded-xl bg-white pb-6 shadow-md md:max-w-4xl md:flex-row md:items-stretch md:pb-0 md:shadow-lg">
         {/* Left side with logo - full width on mobile, 40% width on desktop */}

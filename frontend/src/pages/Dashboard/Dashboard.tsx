@@ -5,14 +5,17 @@ import { Table } from '../../components/Table';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { toast } from 'react-toastify';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
 
 
 const Dashboard: React.FC = () => {
     const { getUser } = useAuth();
+    const [isLoading, setIsLoading] = useState(true);
 
     const navigate = useNavigate();
     const username = getUser()?.username;
     useEffect(() => {
+        setIsLoading(true);
         const user = getUser();
         if (!user) {
             toast.error("You need to be logged in to view this page.");
@@ -23,6 +26,11 @@ const Dashboard: React.FC = () => {
             toast.error("You need to be logged in to view this page.");
             navigate("/login");
         }
+        
+        // Simulate data loading with a timeout
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
     }, []);
 
 
@@ -127,76 +135,81 @@ const Dashboard: React.FC = () => {
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Header and Buttons */}
-                <div className="col-span-full">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <h1 className="text-2xl font-bold text-white">{dashboardData.greetings}</h1>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                            <button
-                                className="bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
-                                onClick={handleAddPatient}
-                            >
-                                Add Patient
-                            </button>
-                            <button
-                                className="bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
-                                onClick={handleAddInventory}
-                            >
-                                Add Inventory
-                            </button>
+            {isLoading ? (
+                <div className="flex items-center justify-center h-64">
+                    <LoadingSpinner size="lg" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Header and Buttons */}
+                    <div className="col-span-full">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <h1 className="text-2xl font-bold text-white">{dashboardData.greetings}</h1>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                                <button
+                                    className="bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
+                                    onClick={handleAddPatient}
+                                >
+                                    Add Patient
+                                </button>
+                                <button
+                                    className="bg-primary hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
+                                    onClick={handleAddInventory}
+                                >
+                                    Add Inventory
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Cards Section */}
-                <div className="col-span-full">
-                    <div className="flex space-x-4 overflow-x-auto">
-                        {dashboardData.cards.map((card, index) => (
-                            <Card
-                                key={index}
-                                color={card.color}
-                                title={card.title}
-                                content={
-                                    card.title === "Daily Income" ? `$${dailyIncome}` :
-                                        card.title === "Daily Patients" ? dailyPatients.toString() :
-                                            card.title === "Latest Date" ? latestDate :
-                                                card.title === "Low Stock" ? stockStatus :
-                                                    card.content
-                                }
-                                redirectUrl={card.redirectUrl}
-                            />
-                        ))}
+                    {/* Cards Section */}
+                    <div className="col-span-full">
+                        <div className="flex space-x-4 overflow-x-auto">
+                            {dashboardData.cards.map((card, index) => (
+                                <Card
+                                    key={index}
+                                    color={card.color}
+                                    title={card.title}
+                                    content={
+                                        card.title === "Daily Income" ? `$${dailyIncome}` :
+                                            card.title === "Daily Patients" ? dailyPatients.toString() :
+                                                card.title === "Latest Date" ? latestDate :
+                                                    card.title === "Low Stock" ? stockStatus :
+                                                        card.content
+                                    }
+                                    redirectUrl={card.redirectUrl}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* Recent Patients Table - Now using the reusable Table component */}
-                <div className="md:col-span-1 col-span-full">
-                    <Table
-                        title="Recent Patients"
-                        columns={recentPatientsColumns}
-                        data={recentPatientsData} // Pass the defined data array
+                    {/* Recent Patients Table - Now using the reusable Table component */}
+                    <div className="md:col-span-1 col-span-full">
+                        <Table
+                            title="Recent Patients"
+                            columns={recentPatientsColumns}
+                            data={recentPatientsData} // Pass the defined data array
+                        />
+                    </div>
+
+                    {/* Stock Alerts Table - Now using the reusable Table component */}
+                    <div className="md:col-span-1 col-span-full md:col-start-2">
+                        <Table
+                            title="Stock Alerts"
+                            columns={stockAlertsColumns}
+                            data={stockAlertsData} // Pass the defined data array
+                        />
+                    </div>
+
+                    {/* Modals */}
+                    <PatientModal
+                        isOpen={showPatientForm}
+                        onClose={() => setShowPatientForm(false)}
+                        patient={null}
                     />
+                    {/* {showInventoryForm && <InventoryModal isOpen={showInventoryForm} onClose={() => setShowInventoryForm(false)} />} */}
                 </div>
-
-                {/* Stock Alerts Table - Now using the reusable Table component */}
-                <div className="md:col-span-1 col-span-full md:col-start-2">
-                    <Table
-                        title="Stock Alerts"
-                        columns={stockAlertsColumns}
-                        data={stockAlertsData} // Pass the defined data array
-                    />
-                </div>
-
-                {/* Modals */}
-                <PatientModal
-                    isOpen={showPatientForm}
-                    onClose={() => setShowPatientForm(false)}
-                    patient={null}
-                />
-                {/* {showInventoryForm && <InventoryModal isOpen={showInventoryForm} onClose={() => setShowInventoryForm(false)} />} */}
-
-            </div>
+            )}
         </>
     );
 };

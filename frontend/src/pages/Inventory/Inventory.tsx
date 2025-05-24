@@ -6,6 +6,7 @@ import axiosInstance from "../../api/axiosConfig";
 import { InventoryModal } from "./modals/InventoryModal";
 import { Medicine } from "../../types/types";
 import { toast } from "react-toastify";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 const Inventory: React.FC = () => {
     // Fetch inventory data from the server
@@ -13,9 +14,11 @@ const Inventory: React.FC = () => {
     const [medicineData, setMedicineData] = useState([{}]);
     const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const response = async () => {
+            setIsLoading(true);
             try {
                 const res = await axiosInstance.get("/medicine/");
                 if (res.status === 200) {
@@ -25,6 +28,8 @@ const Inventory: React.FC = () => {
                 }
             } catch (error) {
                 console.error("Error fetching inventory data:", error);
+            } finally {
+                setIsLoading(false);
             }
         } 
 
@@ -41,6 +46,7 @@ const Inventory: React.FC = () => {
     ];
 
     const handleFetchMedicineData = async () => {
+        setIsLoading(true);
         try {
             const res = await axiosInstance.get("/medicine/");
             if (res.status === 200) {
@@ -50,6 +56,8 @@ const Inventory: React.FC = () => {
             }
         } catch (error) {
             console.error("Error fetching inventory data:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -134,43 +142,47 @@ const Inventory: React.FC = () => {
 
     return (
         <>
+            {isLoading ? (
+                <div className="flex items-center justify-center h-64">
+                    <LoadingSpinner size="lg" />
+                </div>
+            ) : (
+                <div>
+                    <div className="flex space-x-4">
+                        <Input
+                            type="text"
+                            placeholder="Search for inventory..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
 
-            <div >
-                <div className="flex space-x-4">
-                    <Input
-                        type="text"
-                        placeholder="Search for inventory..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                        <Button
+                            label="Add Item"
+                            onClick={handleAddInventory}
+                        // className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
+                        />
+                    </div>
 
-                    <Button
-                        label="Add Item"
-                        onClick={handleAddInventory}
-                    // className="bg-[#6D2E46] hover:opacity-90 text-white font-bold py-2 px-4 rounded transition-opacity"
+                    <div className="mt-4">
+                        <Table
+                            title="Medicines"
+                            columns={medicineColumns}
+                            data={filteredMedicineData}
+                            selector={true}
+                            onDelete={handleDelete} 
+                            openModal={handleEdit}
+                        />
+                    </div>
+
+                    <InventoryModal
+                        isOpen={showInventoryForm}
+                        onClose={() => setShowInventoryForm(false)}
+                        medicine={selectedMedicine}
+                        handleSubmit={handleSubmit}
+                        handleEdit={handleUpdate}
                     />
                 </div>
-
-                <div className="mt-4">
-                    <Table
-                        title="Medicines"
-                        columns={medicineColumns}
-                        data={filteredMedicineData}
-                        selector={true}
-                        onDelete={handleDelete} 
-                        openModal={handleEdit}
-                    />
-                </div>
-
-                <InventoryModal
-                    isOpen={showInventoryForm}
-                    onClose={() => setShowInventoryForm(false)}
-                    medicine={selectedMedicine}
-                    handleSubmit={handleSubmit}
-                    handleEdit={handleUpdate}
-                />
-
-            </div>
+            )}
         </>
     )
 }

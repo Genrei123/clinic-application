@@ -48,10 +48,10 @@ export const BabyProgressBar: React.FC<BabyProgressBarProps> = ({
       aria-valuemin={0}
       aria-valuemax={100}
     >
-      <div className="relative h-8 w-full rounded-full bg-[#D9D9D900] border-2 border-[#AEA4BF]">
+      <div className="relative h-12 w-full rounded-full bg-[#D9D9D900] border-2 border-[#AEA4BF] shadow-inner">
         {/* Progress fill */}
         <motion.div
-          className="h-full rounded-full bg-[#AEA4BF]/20"
+          className="h-full rounded-full bg-[#AEA4BF]/30"
           initial={{ width: 0 }}
           animate={{ width: `${currentProgress}%` }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -64,10 +64,10 @@ export const BabyProgressBar: React.FC<BabyProgressBarProps> = ({
           animate={{ left: `${currentProgress}%` }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          <div className="relative flex items-center justify-center w-12 h-12 -ml-6 rounded-full bg-[#D9D9D9] shadow-md">
+          <div className="relative flex items-center justify-center w-16 h-16 -ml-8 rounded-full bg-[#D9D9D9] shadow-md">
             {/* Baby SVG that rotates as progress increases */}
             <motion.div
-              className="w-8 h-8"
+              className="w-12 h-12"
               animate={{ rotate: rotation }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
