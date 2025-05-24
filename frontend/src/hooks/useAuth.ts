@@ -18,12 +18,19 @@ export function useAuth() {
 
     const getUser = () => {
         const user = localStorage.getItem('user');
-        if (user) {
-            console.log('User data:', user);
+        const data = localStorage.getItem('token');
+        if (user && data) {
             return JSON.parse(user);
-        } 
+        } else {
+            console.log('Illegal User, How do you get our URL? Hacker MAN! >:)');
+            console.log('Go back to Nine Realm, you hacker!');
+            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+
+            localStorage.removeItem('user');
+            return true;
+        }
         return null;
-    }
+    }   
 
     const isLoggedIn = () => {
         const token = localStorage.getItem('token');
