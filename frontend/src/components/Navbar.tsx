@@ -1,5 +1,6 @@
 import { Bell, Sun, User } from "lucide-react";
 import { Clock } from "./Clock";
+import NotificationBell from "./notif-bar";
 
 export const Navbar: React.FC = () => {
     return (
@@ -7,7 +8,7 @@ export const Navbar: React.FC = () => {
         
             <div className="flex items-center space-x-4">
                 <a className="text-white">
-                    <Bell />
+                    <NotificationBell />
                 </a>
 
                 <a className="text-white">
