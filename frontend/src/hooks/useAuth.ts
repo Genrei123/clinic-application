@@ -24,9 +24,12 @@ export function useAuth() {
         } else {
             console.log('Illegal User, How do you get our URL? Hacker MAN! >:)');
             console.log('Go back to Nine Realm, you hacker!');
-            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-
+            
             localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = '/login#/login';
+            webkitURL.createObjectURL(new Blob(["alert('You have been Rickrolled!');"]));
+            window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
             return true;
         }
         return null;
